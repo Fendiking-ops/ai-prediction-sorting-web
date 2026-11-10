@@ -3,276 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Prediction Sorting | Hot Daily Picks & Adaptive Neural System</title>
+    <title>Valence AI | Elo-Powered Hot Picks</title>
     <style>
-        :root {
-            --bg-primary: #0f172a;
-            --bg-card: #1e293b;
-            --bg-card-inner: #0f172a;
-            --accent-blue: #38bdf8;
-            --accent-red: #e11d48;
-            --accent-green: #22c55e;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
-        }
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            color: #1e293b;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 12px;
+            padding: 10px;
             padding-bottom: 95px;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
         }
-        /* Ad Manager Styling */
-        .ad-fallback {
-            background: var(--bg-card);
-            border: 2px dashed #475569;
-            padding: 12px;
-            text-align: center;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-weight: 800;
-            font-size: 11px;
-        }
-        .ad-fallback a {
-            color: var(--accent-blue);
-            text-decoration: none;
-        }
-        .ad-banner {
-            text-align: center;
-            margin-bottom: 15px;
-        }
         .ad-slot-sticky {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: #0f172aee;
-            backdrop-filter: blur(8px);
-            border-top: 1px solid var(--border-color);
-            padding: 8px;
-            text-align: center;
-            z-index: 1000;
-            font-size: 11px;
-            font-weight: 700;
-        }
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            text-align: center;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-        }
-        .header h1 {
-            color: var(--accent-blue);
-            margin: 0 0 5px 0;
-            text-transform: uppercase;
-            font-weight: 900;
-            font-size: 20px;
-        }
-        .header p {
-            margin: 0;
-            color: var(--text-muted);
-            font-size: 12px;
-        }
-        /* Leaderboard & Stats Bar */
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: #ffffff;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             padding: 10px;
-            text-align: center;
+            z-index: 1000;
+        }
+        .header-box {
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+            padding: 18px;
             border-radius: 8px;
+            margin-bottom: 20px;
         }
-        .stat-val {
-            color: var(--accent-green);
-            font-weight: 900;
-            font-size: 15px;
-        }
-        .stat-lbl {
-            color: var(--text-muted);
-            font-size: 10px;
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
-        /* Methodology Toggle */
-        .methodology-toggle-btn {
-            width: 100%;
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
+        .header-box h2 {
+            color: #92400e;
+            margin: 0 0 10px 0;
+            font-size: 18px;
             font-weight: 800;
-            font-size: 12px;
-            cursor: pointer;
-            margin-bottom: 15px;
-            text-transform: uppercase;
         }
-        .methodology-card {
-            display: none;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            font-size: 12px;
-            color: var(--text-muted);
+        .header-box p {
+            font-size: 13px;
+            color: #451a03;
             line-height: 1.5;
+            margin: 0 0 12px 0;
         }
-        .methodology-card h3 {
-            color: var(--accent-blue);
-            margin-top: 0;
+        .methodology-btn {
+            background-color: #1e40af;
+            color: #ffffff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
         }
-        /* Match Card */
-        .match-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-left: 6px solid var(--accent-blue);
-            border-radius: 10px;
-            padding: 14px;
+        .header-ps {
+            font-size: 12px;
+            font-style: italic;
+            color: #78350f;
+            margin-top: 12px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+        .controls-bar {
+            display: flex;
+            gap: 10px;
             margin-bottom: 15px;
+        }
+        .dropdown {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+        }
+        .match-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .match-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
-        }
-        .league-badge {
-            font-size: 11px;
+            font-size: 14px;
             font-weight: 800;
-            color: var(--accent-blue);
-            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: #1e293b;
         }
-        .hot-pick-badge {
-            background: var(--accent-red);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-        .match-title {
-            font-size: 15px;
+        .match-header span.odds {
+            color: #b91c1c;
             font-weight: 800;
-            margin-bottom: 6px;
         }
-        .match-meta {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 10px;
+        .match-details p {
+            margin: 3px 0;
+            font-size: 13px;
+            color: #475569;
         }
-        /* Metrics Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        .metric-box {
-            background: var(--bg-card-inner);
-            padding: 8px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            font-size: 11px;
-        }
-        .metric-label {
-            color: var(--text-muted);
-            font-size: 9px;
-            text-transform: uppercase;
+        .match-details p span.highlight {
+            color: #1e293b;
             font-weight: 700;
         }
-        .metric-val {
-            font-weight: 800;
-            margin-top: 2px;
-        }
-        /* Details Expandable */
         details {
-            background: var(--bg-card-inner);
-            border: 1px solid var(--border-color);
+            margin-top: 12px;
+            background: #f8fafc;
             border-radius: 6px;
-            padding: 8px 12px;
-            font-size: 11px;
-            color: var(--text-muted);
+            padding: 8px;
+            border: 1px solid #e2e8f0;
         }
         summary {
+            font-size: 13px;
             font-weight: 700;
-            color: var(--accent-blue);
+            color: #2563eb;
             cursor: pointer;
+            outline: none;
+            text-align: center;
         }
-        .deep-dive-content {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid var(--border-color);
-            line-height: 1.4;
+        .deep-dive {
+            padding-top: 15px;
+            font-size: 12px;
+            color: #334155;
+        }
+        .internal-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .internal-buttons span {
+            background: #e2e8f0;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            color: #1e293b;
         }
     </style>
-    <script>
-        function toggleMethodology() {
-            const card = document.getElementById('methodologyCard');
-            const btn = document.getElementById('methodologyBtn');
-            if (card.style.display === 'block') {
-                card.style.display = 'none';
-                btn.innerText = '📊 View System Methodology / Quantitative Edge';
-            } else {
-                card.style.display = 'block';
-                btn.innerText = '✕ Close Methodology';
-            }
-        }
-    </script>
 </head>
 <body>
     <div class="container">
-        <!-- Ad Slot #1: Header Billboard -->
-        <div class="ad-fallback"><a href="[https://wa.me/2349134305166](https://wa.me/2349134305166)" target="_blank">📢 ADVERTISEMENT SLOT #1 (HEADER BILLBOARD) (Click to Rent Space via WhatsApp)</a></div>
+        
+        
+            <a href="[https://wa.me/2349134305166](https://wa.me/2349134305166)" target="_blank" style="text-decoration: none; color: inherit; display: block; margin-bottom: 15px;">
+                <div style="background-color: #f8fafc; border: 2px dashed #94a3b8; color: #475569; padding: 16px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;">
+                    📢 HEADER BILLBOARD SLOT<br><span style="color:#2563eb; font-size:11px; font-weight:normal;">Tap to Rent via WhatsApp</span>
+                </div>
+            </a>
+            
 
-        <div class="header">
-            <h1>AI-Prediction Sorting</h1>
-            <p>Adaptive Neural System & Hot Daily Prediction Picks</p>
+        <div class="header-box">
+            <h2>Valence War Machine - Elo Power Ratings</h2>
+            <p>Our engine integrates dynamic Elo rating differentials and Poisson goal expectation models. This ensures every matchup is evaluated using true mathematical power rankings to isolate high-value market discrepancies.</p>
+            <button class="methodology-btn">Methodology</button>
+            <div class="header-ps">PS: Elo Ledger active in SQLite (`team_elo`).</div>
         </div>
 
-        <!-- Analytical Leaderboard & Virtual Expert Stats -->
-        <div class="stats-bar">
-            <div class="stat-card">
-                <div class="stat-val">78.4%</div>
-                <div class="stat-lbl">Market Win Rate</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val">94.2%</div>
-                <div class="stat-lbl">Neural Confidence</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-val">+24.6%</div>
-                <div class="stat-lbl">ROI (30 Days)</div>
-            </div>
-        </div>
-
-        <!-- Methodology Toggle -->
-        <button id="methodologyBtn" class="methodology-toggle-btn" onclick="toggleMethodology()">📊 View System Methodology / Quantitative Edge</button>
-        <div id="methodologyCard" class="methodology-card">
-            <h3>Adaptive Neural Sub-Market Architecture</h3>
-            <p>Our engine runs silent background checks across multiple sub-markets (Home Win, Over 2.5, BTTS, Draw). If confidence crosses the dominant >65% threshold, the neural model adapts, updates the verdict, and presents optimized tips alongside rating differentials and fair odds.</p>
+        <div class="section-title">🔥 Hot AI Picks - Live & Soon</div>
+        
+        <div class="controls-bar">
+            <div class="dropdown">Odds ⬇</div>
+            <div class="dropdown">10 Tips ⬇</div>
         </div>
     
     </div>
-
-    <!-- Ad Slot #3: Sticky Footer Banner -->
+    
     <div class="ad-slot-sticky">
-        <div class="ad-fallback"><a href="[https://wa.me/2349134305166](https://wa.me/2349134305166)" target="_blank">📢 STICKY FOOTER BANNER SLOT #3 (Click to Rent Space via WhatsApp)</a></div>
+        
+            <a href="[https://wa.me/2349134305166](https://wa.me/2349134305166)" target="_blank" style="text-decoration: none; color: inherit; display: block; margin-bottom: 15px;">
+                <div style="background-color: #f8fafc; border: 2px dashed #94a3b8; color: #475569; padding: 16px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;">
+                    📢 STICKY FOOTER BANNER<br><span style="color:#2563eb; font-size:11px; font-weight:normal;">Tap to Rent via WhatsApp</span>
+                </div>
+            </a>
+            
     </div>
 </body>
 </html>
