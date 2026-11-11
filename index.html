@@ -11,7 +11,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 10px;
-            padding-bottom: 95px;
+            padding-bottom: 100px;
         }
         .container {
             max-width: 800px;
@@ -23,16 +23,17 @@
             left: 0;
             width: 100%;
             background: #ffffff;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            padding: 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+            padding: 8px;
             z-index: 1000;
+            text-align: center;
         }
         .header-box {
             background-color: #fffbeb;
             border: 1px solid #fde68a;
             padding: 18px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .header-box h2 {
             color: #92400e;
@@ -56,11 +57,41 @@
             font-size: 13px;
             cursor: pointer;
         }
-        .header-ps {
-            font-size: 12px;
-            font-style: italic;
-            color: #78350f;
+        #methodologyContent {
+            display: none;
             margin-top: 12px;
+            background: #ffffff;
+            border: 1px solid #fcd34d;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #78350f;
+            line-height: 1.4;
+        }
+        .date-picker-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: thin;
+        }
+        .date-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .date-btn.active {
+            background: #1e40af;
+            color: #ffffff;
+            border-color: #1e40af;
         }
         .section-title {
             font-size: 18px;
@@ -69,20 +100,6 @@
             align-items: center;
             gap: 5px;
             margin-bottom: 12px;
-        }
-        .controls-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .dropdown {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #475569;
         }
         .match-card {
             background: #ffffff;
@@ -148,40 +165,2636 @@
             font-size: 11px;
             color: #1e293b;
         }
+        .badge-result {
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .badge-pending {
+            background: #fef9c3;
+            color: #854d0e;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+        }
     </style>
+    <script>
+        function toggleMethodology() {
+            const box = document.getElementById('methodologyContent');
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function filterDate(selectedDate) {
+            document.querySelectorAll('.date-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-date') === selectedDate) {
+                    btn.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.match-card').forEach(card => {
+                if(card.getAttribute('data-date') === selectedDate) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        window.onload = function() {
+            const availableDates = ["2026-11-06", "2026-11-07", "2026-11-08", "2026-11-14"];
+            const today = "2026-11-11";
+            let defaultDate = availableDates.includes(today) ? today : (availableDates.length > 0 ? availableDates[0] : '');
+            if(defaultDate) {
+                filterDate(defaultDate);
+            }
+        };
+    </script>
 </head>
 <body>
     <div class="container">
         
         
             <a href="[https://wa.me/2349134305166](https://wa.me/2349134305166)" target="_blank" style="text-decoration: none; color: inherit; display: block; margin-bottom: 15px;">
-                <div style="background-color: #f8fafc; border: 2px dashed #94a3b8; color: #475569; padding: 16px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;">
-                    📢 HEADER BILLBOARD SLOT<br><span style="color:#2563eb; font-size:11px; font-weight:normal;">Tap to Rent via WhatsApp</span>
+                <div style="background-color: #ffffff; border: 2px dashed #3b82f6; color: #1e40af; padding: 14px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    📢 HEADER BILLBOARD AD SLOT<br><span style="color:#2563eb; font-size:11px; font-weight:600;">Tap here to open WhatsApp & Rent Ad Space</span>
                 </div>
             </a>
             
 
         <div class="header-box">
-            <h2>Valence War Machine - Elo Power Ratings</h2>
-            <p>Our engine integrates dynamic Elo rating differentials and Poisson goal expectation models. This ensures every matchup is evaluated using true mathematical power rankings to isolate high-value market discrepancies.</p>
-            <button class="methodology-btn">Methodology</button>
-            <div class="header-ps">PS: Elo Ledger active in SQLite (`team_elo`).</div>
+            <h2>Valence War Machine - Interactive Audit Ledger</h2>
+            <p>Select any date below to inspect historical audit results (past matches with actual scores) or active value picks for future fixtures.</p>
+            <button class="methodology-btn" onclick="toggleMethodology()">Methodology</button>
+            <div id="methodologyContent">
+                <b>Audit Transparency:</b> Past match cards display the exact engine prediction alongside the final match score to verify accuracy. Future cards show real-time Elo convergence and Poisson probabilities.
+            </div>
         </div>
 
-        <div class="section-title">🔥 Hot AI Picks - Live & Soon</div>
-        
-        <div class="controls-bar">
-            <div class="dropdown">Odds ⬇</div>
-            <div class="dropdown">10 Tips ⬇</div>
+        <div class="section-title">📅 Select Match Date (-5 to +5 Days)</div>
+        <div class="date-picker-bar">
+    <button class="date-btn" data-date="2026-11-06" onclick="filterDate('2026-11-06')">2026-11-06</button>
+<button class="date-btn" data-date="2026-11-07" onclick="filterDate('2026-11-07')">2026-11-07</button>
+<button class="date-btn" data-date="2026-11-08" onclick="filterDate('2026-11-08')">2026-11-08</button>
+<button class="date-btn" data-date="2026-11-14" onclick="filterDate('2026-11-14')">2026-11-14</button>
+
         </div>
+
+        <div class="section-title">🔥 Match Predictions & Results Audit</div>
     
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Cruzeiro EC vs EC Bahia</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Cruzeiro EC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Willem II Tilburg vs PEC Zwolle</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Willem II Tilburg to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Hamburger SV vs Borussia Mönchengladbach</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Hamburger SV to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Toulouse FC vs RC Strasbourg Alsace</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Toulouse FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Venezia FC vs Udinese Calcio</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Venezia FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Derby County FC vs Bolton Wanderers FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Derby County FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Everton FC vs Coventry City FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Everton FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Sevilla FC vs Deportivo Alavés</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Sevilla FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 FC Famalicão vs FC Arouca</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">FC Famalicão to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-06" style="display: none;">
+            <div class="match-header">
+                <div>🌍 EC Vitória vs Fluminense FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">EC Vitória to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 3</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-06</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Portsmouth FC vs Stoke City FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Portsmouth FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Leeds United FC vs Tottenham Hotspur FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Leeds United FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Wrexham AFC vs Wolverhampton Wanderers FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Wrexham AFC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Bristol City FC vs Norwich City FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Bristol City FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 5</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Málaga CF vs Real Racing Club de Santander</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Málaga CF to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Torino FC vs US Lecce</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Torino FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Cagliari Calcio vs Frosinone Calcio</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Cagliari Calcio to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 RB Leipzig vs FC Augsburg</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">RB Leipzig to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 5 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Borussia Dortmund vs SV 07 Elversberg</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Borussia Dortmund to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 SC Paderborn 07 vs Eintracht Frankfurt</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">SC Paderborn 07 to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 1. FSV Mainz 05 vs FC Bayern München</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">1. FSV Mainz 05 to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Arsenal FC vs Hull City AFC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Arsenal FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Watford FC vs Middlesbrough FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Watford FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Cardiff City FC vs Burnley FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Cardiff City FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 5 - 4</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Birmingham City FC vs Swansea City AFC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Birmingham City FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 West Bromwich Albion FC vs Millwall FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">West Bromwich Albion FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Preston North End FC vs Southampton FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Preston North End FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Queens Park Rangers FC vs Lincoln City FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Queens Park Rangers FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Fulham FC vs Newcastle United FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Fulham FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Blackburn Rovers FC vs West Ham United FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Blackburn Rovers FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Charlton Athletic FC vs Sheffield United FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Charlton Athletic FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 RCD Espanyol de Barcelona vs RC Deportivo La Coruña</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">RCD Espanyol de Barcelona to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Fortuna Sittard vs Telstar 1963</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Fortuna Sittard to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Parma Calcio 1913 vs Bologna FC 1909</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Parma Calcio 1913 to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Nottingham Forest FC vs Manchester City FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Nottingham Forest FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 VfB Stuttgart vs SV Werder Bremen</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">VfB Stuttgart to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 CA Osasuna vs Athletic Club</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">CA Osasuna to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 ADO Den Haag vs Sparta Rotterdam</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">ADO Den Haag to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 AJ Auxerre vs Paris FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">AJ Auxerre to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 FC Alverca vs Casa Pia AC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">FC Alverca to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 AS Roma vs US Sassuolo Calcio</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">AS Roma to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 3 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Valencia CF vs Real Madrid CF</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Valencia CF to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 3</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 SBV Excelsior vs Go Ahead Eagles</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">SBV Excelsior to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Paris Saint-Germain FC vs ES Troyes AC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Paris Saint-Germain FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-07" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Sporting Clube de Portugal vs Moreirense FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Sporting Clube de Portugal to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-07</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 GD Estoril Praia vs CS Marítimo</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">GD Estoril Praia to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-pending">Status: PENDING</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 SC Heerenveen vs Feyenoord Rotterdam</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">SC Heerenveen to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 5 - 3</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 SSC Napoli vs SS Lazio</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">SSC Napoli to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Elche CF vs Real Betis Balompié</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Elche CF to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 FC Twente '65 vs AFC Ajax</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">FC Twente '65 to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Sunderland AFC vs Chelsea FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Sunderland AFC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Brighton & Hove Albion FC vs Brentford FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Brighton & Hove Albion FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Stade Rennais FC 1901 vs Lille OSC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Stade Rennais FC 1901 to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Crystal Palace FC vs Liverpool FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Crystal Palace FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 3</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Genoa CFC vs AC Milan</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Genoa CFC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Ipswich Town FC vs AFC Bournemouth</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Ipswich Town FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 AC Monza vs Atalanta BC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">AC Monza to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 1. FC Köln vs Bayer 04 Leverkusen</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">1. FC Köln to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Real Sociedad de Fútbol vs Rayo Vallecano de Madrid</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Real Sociedad de Fútbol to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 CD Nacional vs Académico de Viseu FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">CD Nacional to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 CD Santa Clara vs Gil Vicente FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">CD Santa Clara to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 SC Cambuur-Leeuwarden vs PSV</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">SC Cambuur-Leeuwarden to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 5</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 AZ vs FC Groningen</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">AZ to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 4 - 3</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Angers SCO vs OGC Nice</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Angers SCO to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Stade Brestois 29 vs Olympique Lyonnais</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Stade Brestois 29 to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Le Havre AC vs FC Lorient</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Le Havre AC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Le Mans FC vs AS Monaco FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Le Mans FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 SC Freiburg vs 1. FC Union Berlin</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">SC Freiburg to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Manchester United FC vs Aston Villa FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Manchester United FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 4 - 4</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 FC Internazionale Milano vs Como 1907</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">FC Internazionale Milano to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 RC Celta de Vigo vs Levante UD</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">RC Celta de Vigo to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Villarreal CF vs Getafe CF</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Villarreal CF to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 0</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Vitória SC vs FC Porto</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Vitória SC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 TSG 1899 Hoffenheim vs FC Schalke 04</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">TSG 1899 Hoffenheim to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 FC Utrecht vs NEC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">FC Utrecht to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 3</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Racing Club de Lens vs Olympique de Marseille</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Racing Club de Lens to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 ACF Fiorentina vs Juventus FC</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">ACF Fiorentina to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Club Atlético de Madrid vs FC Barcelona</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Club Atlético de Madrid to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 1 - 2</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Rio Ave FC vs Sporting Clube de Braga</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Rio Ave FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 0 - 1</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-08" style="display: none;">
+            <div class="match-header">
+                <div>🌍 CF Estrela da Amadora vs Sport Lisboa e Benfica</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">CF Estrela da Amadora to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-result">FT: 2 - 3</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-08</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-14" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Mirassol FC vs CA Mineiro</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Mirassol FC to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-pending">Status: PENDING</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-14</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
+        <div class="match-card" data-date="2026-11-14" style="display: none;">
+            <div class="match-header">
+                <div>🌍 Chapecoense AF vs CR Vasco da Gama</div>
+                <div class="odds">⚖️ 1.69</div>
+            </div>
+            <div class="match-details">
+                <p>Engine Tip: <span class="highlight">Chapecoense AF to Win</span> &nbsp;|&nbsp; Est Score: <span class="highlight">1 - 1</span></p>
+                <p>Confidence: <span class="highlight">70.3%</span> &nbsp;|&nbsp; Result: <span class="badge-pending">Status: PENDING</span></p>
+                <p>Value Index: <span class="highlight">+1.7%</span> (Fair Odds 1.78)</p>
+            </div>
+            
+            <details>
+                <summary>+ More Info & Elo Audit</summary>
+                <div class="deep-dive">
+                    <p style="text-align:center; font-style:italic;">Sub-Market: Home Win (1X2) | Match Date: 2026-11-14</p>
+                    
+                    <div class="internal-buttons">
+                        <span>🔥 Hot AI Picks</span>
+                        <span>💎 Audit Record</span>
+                        <span>🔴 Live Status</span>
+                        <span>📊 Poisson Stats</span>
+                    </div>
+
+                    <p><b>Forecast:</b> Elo power rating differential confirms Home Win (1X2) with 70.3% neural convergence.</p>
+                    <hr style="border:0; border-top:1px solid #cbd5e1; margin: 10px 0;">
+                    <p><b>Elo Ratings [Home / Away]:</b> 1500 / 1500</p>
+                    <p><b>Market Variance:</b> Opening Odds: 1.86 | Available Odds: 1.69</p>
+                </div>
+            </details>
+        </div>
+        
     </div>
     
     <div class="ad-slot-sticky">
         
             <a href="[https://wa.me/2349134305166](https://wa.me/2349134305166)" target="_blank" style="text-decoration: none; color: inherit; display: block; margin-bottom: 15px;">
-                <div style="background-color: #f8fafc; border: 2px dashed #94a3b8; color: #475569; padding: 16px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;">
-                    📢 STICKY FOOTER BANNER<br><span style="color:#2563eb; font-size:11px; font-weight:normal;">Tap to Rent via WhatsApp</span>
+                <div style="background-color: #ffffff; border: 2px dashed #3b82f6; color: #1e40af; padding: 14px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                    📢 STICKY FOOTER BANNER AD SLOT #3<br><span style="color:#2563eb; font-size:11px; font-weight:600;">Tap here to open WhatsApp & Rent Ad Space</span>
                 </div>
             </a>
             
