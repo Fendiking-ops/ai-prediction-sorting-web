@@ -134,52 +134,182 @@
       });
     })();
     </script>
-<!-- Valence AI Elite Access Subscription Widget -->
+<!-- Valence AI Elite Access Subscription Widget (Modern Theme-Matched) -->
+<style id="valence-sub-styles">
+  #valence-sub-card {
+    position: relative;
+    max-width: 440px;
+    margin: 28px auto;
+    padding: 26px 24px;
+    border-radius: 14px;
+    background: linear-gradient(160deg, rgba(15, 23, 42, 0.96) 0%, rgba(17, 24, 39, 0.98) 100%);
+    color: #f8fafc;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    box-shadow: 0 18px 40px -15px rgba(2, 6, 23, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(10px);
+    font-family: inherit;
+    text-align: left;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  #valence-sub-card:hover {
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+  #valence-sub-card .vsc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+  #valence-sub-card .vsc-title {
+    margin: 0 0 6px 0;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: #f8fafc;
+  }
+  #valence-sub-card .vsc-desc {
+    margin: 0 0 16px 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #cbd5e1;
+  }
+  #valence-sub-card .vsc-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+  }
+  #valence-sub-card .vsc-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: #4ade80;
+  }
+  #valence-sub-card .vsc-cycle {
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  #valence-sub-card #subscriber-email {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border-radius: 9px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(15, 23, 42, 0.85);
+    color: #f8fafc;
+    font-size: 14px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  #valence-sub-card #subscriber-email::placeholder {
+    color: #64748b;
+  }
+  #valence-sub-card #subscriber-email:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+  }
+  #valence-sub-card .vsc-btn {
+    width: 100%;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    box-shadow: 0 8px 20px -6px rgba(22, 163, 74, 0.55);
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  #valence-sub-card .vsc-btn:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+  #valence-sub-card .vsc-btn:active {
+    transform: translateY(0);
+  }
+  #valence-sub-card #sub-status-msg {
+    min-height: 18px;
+    margin: 10px 0 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #94a3b8;
+    text-align: center;
+  }
+</style>
 <script src="https://js.paystack.co/v1/inline.js"></script>
-<div id="valence-sub-card" style="background: #0f172a; color: #f8fafc; padding: 24px; border-radius: 10px; max-width: 420px; margin: 20px auto; text-align: center; border: 1px solid #334155; font-family: system-ui, -apple-system, sans-serif;">
-    <h3 style="color: #38bdf8; margin-top: 0; margin-bottom: 8px; font-size: 18px;">Valence AI Elite Access</h3>
-    <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 18px; line-height: 1.5;">
-        Unlock full access to Tier-1 sharp picks, Bayesian yield metrics, and automated match logs for <strong>₦10,000 / month</strong>.
-    </p>
-    <input type="email" id="subscriber-email" placeholder="Enter your email address" required 
-           style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 6px; border: 1px solid #475569; background: #1e293b; color: #fff; margin-bottom: 12px; font-size: 14px;">
-    <button onclick="initiatePaystackSubscription()" 
-            style="width: 100%; background: #16a34a; color: #ffffff; border: none; padding: 12px 20px; font-weight: 700; border-radius: 6px; cursor: pointer; font-size: 14px;">
-        Subscribe Now (₦10,000/mo)
-    </button>
-    <p id="sub-status-msg" style="font-size: 12px; color: #94a3b8; margin-top: 10px; margin-bottom: 0;"></p>
+<div id="valence-sub-card" data-theme-bg="#0b1120" data-theme-card="#0f172a">
+  <div class="vsc-badge">Elite Membership</div>
+  <h3 class="vsc-title">Valence AI Elite Access</h3>
+  <p class="vsc-desc">
+    Unlock full access to Tier-1 sharp picks, Bayesian yield metrics, and automated match logs.
+  </p>
+  <div class="vsc-price-row">
+    <span class="vsc-price">₦10,000</span>
+    <span class="vsc-cycle">per month · Paystack</span>
+  </div>
+  <input type="email" id="subscriber-email" placeholder="Enter your email address" required autocomplete="email">
+  <button type="button" class="vsc-btn" onclick="initiatePaystackSubscription()">
+    Subscribe Now (₦10,000/mo)
+  </button>
+  <p id="sub-status-msg"></p>
 </div>
 <script>
-    function initiatePaystackSubscription() {
-        const emailInput = document.getElementById('subscriber-email').value.trim();
-        const statusMsg = document.getElementById('sub-status-msg');
-        if (!emailInput || !emailInput.includes('@')) {
-            statusMsg.style.color = '#f87171';
-            statusMsg.textContent = 'Please enter a valid email address.';
-            return;
-        }
-        statusMsg.style.color = '#38bdf8';
-        statusMsg.textContent = 'Opening secure Paystack checkout...';
-        const handler = PaystackPop.setup({
-            key: 'pk_live_3b5aff686eaff612d0e6315804bb7679c6a2b6ed',
-            email: emailInput,
-            amount: 1000000,
-            currency: 'NGN',
-            plan: 'PLN_yhk5z4rnocx4yjk',
-            ref: 'VAL_' + Math.floor((Math.random() * 1000000000) + 1),
-            callback: function(response) {
-                statusMsg.style.color = '#4ade80';
-                statusMsg.textContent = 'Payment verified! Ref: ' + response.reference + '. Unlocking access...';
-                localStorage.setItem('valence_subscriber_email', emailInput);
-                setTimeout(() => { location.reload(); }, 2000);
-            },
-            onClose: function() {
-                statusMsg.style.color = '#94a3b8';
-                statusMsg.textContent = 'Checkout closed. Click Subscribe whenever you are ready.';
-            }
-        });
-        handler.openIframe();
+  (function () {
+    const savedEmail = localStorage.getItem('valence_subscriber_email');
+    const emailEl = document.getElementById('subscriber-email');
+    if (savedEmail && emailEl && !emailEl.value) {
+      emailEl.value = savedEmail;
     }
+  })();
+
+  function initiatePaystackSubscription() {
+    const emailInput = document.getElementById('subscriber-email').value.trim();
+    const statusMsg = document.getElementById('sub-status-msg');
+    if (!emailInput || !emailInput.includes('@')) {
+      statusMsg.style.color = '#f87171';
+      statusMsg.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    statusMsg.style.color = '#38bdf8';
+    statusMsg.textContent = 'Opening secure Paystack checkout...';
+    const handler = PaystackPop.setup({
+      key: 'pk_live_3b5aff686eaff612d0e6315804bb7679c6a2b6ed',
+      email: emailInput,
+      amount: 1000000,
+      currency: 'NGN',
+      plan: 'PLN_yhk5z4rnocx4yjk',
+      ref: 'VAL_' + Math.floor((Math.random() * 1000000000) + 1),
+      callback: function(response) {
+        statusMsg.style.color = '#4ade80';
+        statusMsg.textContent = 'Payment verified! Ref: ' + response.reference + '. Unlocking access...';
+        localStorage.setItem('valence_subscriber_email', emailInput);
+        setTimeout(() => { location.reload(); }, 2000);
+      },
+      onClose: function() {
+        statusMsg.style.color = '#94a3b8';
+        statusMsg.textContent = 'Checkout closed. Click Subscribe whenever you are ready.';
+      }
+    });
+    handler.openIframe();
+  }
 </script>
+
 
 </body></html>
