@@ -490,4 +490,119 @@
 
 
 
+
+<!-- Valence Calendar Active-Date Auto-Center (Additive) -->
+<script id="valence-calendar-autocenter">
+  (function () {
+    function isDateLikeText(txt) {
+      const t = (txt || "").trim();
+      return /^20\d{2}-\d{2}-\d{2}$/.test(t) || /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/i.test(t);
+    }
+
+    function findActiveDateEl() {
+      const selectors = [
+        "[class*='date'] .active",
+        "[class*='calendar'] .active",
+        "[class*='date-bar'] .active",
+        "[class*='date-strip'] .active",
+        "[class*='date'] [aria-selected='true']",
+        "[class*='calendar'] [aria-selected='true']",
+        "[class*='date'] [aria-current='date']",
+        "[class*='date'] .selected",
+        "[class*='calendar'] .selected",
+        "button.active",
+        "a.active",
+        ".date-btn.active",
+        ".date-pill.active",
+        ".date-chip.active"
+      ];
+
+      for (const sel of selectors) {
+        try {
+          const matches = Array.from(document.querySelectorAll(sel));
+          const hit = matches.find(el => {
+            const rect = el.getBoundingClientRect();
+            return rect.width > 0 && isDateLikeText(el.innerText || el.textContent || "");
+          });
+          if (hit) return hit;
+        } catch (e) {}
+      }
+
+      // Fallback: check elements with date-like text that have inline active/highlighted styling
+      const candidates = Array.from(document.querySelectorAll("button, a, div, span"));
+      for (const el of candidates) {
+        const txt = (el.innerText || el.textContent || "").trim();
+        if (!isDateLikeText(txt) || txt.length > 24) continue;
+        const styleAttr = (el.getAttribute("style") || "").toLowerCase();
+        const cls = (el.className || "").toString().toLowerCase();
+        if (
+          cls.includes("active") ||
+          cls.includes("selected") ||
+          cls.includes("current") ||
+          styleAttr.includes("background") ||
+          styleAttr.includes("#2563eb") ||
+          styleAttr.includes("#0284c7") ||
+          styleAttr.includes("#38bdf8")
+        ) {
+          const rect = el.getBoundingClientRect();
+          if (rect.width > 0 && el.parentElement && el.parentElement.scrollWidth > el.parentElement.clientWidth) {
+            return el;
+          }
+        }
+      }
+      return null;
+    }
+
+    function findScrollableStrip(activeEl) {
+      let cur = activeEl ? activeEl.parentElement : null;
+      while (cur && cur !== document.body && cur !== document.documentElement) {
+        if (cur.scrollWidth > cur.clientWidth + 4) {
+          return cur;
+        }
+        cur = cur.parentElement;
+      }
+
+      const fallbackStrips = Array.from(
+        document.querySelectorAll("[class*='date'], [class*='calendar'], [class*='strip'], [class*='bar']")
+      );
+      return fallbackStrips.find(el => el.scrollWidth > el.clientWidth + 4) || null;
+    }
+
+    function centerActiveCalendarDate(behavior) {
+      const activeEl = findActiveDateEl();
+      if (!activeEl) return false;
+      const strip = findScrollableStrip(activeEl);
+      if (!strip) return false;
+
+      const stripRect = strip.getBoundingClientRect();
+      const elRect = activeEl.getBoundingClientRect();
+      const currentLeft = strip.scrollLeft;
+      const elCenterInStrip = (elRect.left - stripRect.left) + currentLeft + (elRect.width / 2);
+      const targetScrollLeft = Math.max(0, elCenterInStrip - (strip.clientWidth / 2));
+
+      strip.scrollTo({
+        left: targetScrollLeft,
+        behavior: behavior || "auto"
+      });
+      return true;
+    }
+
+    function scheduleCenter(retriesLeft) {
+      if (centerActiveCalendarDate("auto")) return;
+      if (retriesLeft > 0) {
+        setTimeout(() => scheduleCenter(retriesLeft - 1), 180);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => scheduleCenter(8));
+    window.addEventListener("load", () => scheduleCenter(8));
+    window.addEventListener("pageshow", () => scheduleCenter(8));
+    document.addEventListener("click", (ev) => {
+      const target = ev.target && ev.target.closest("button, a, div, span");
+      if (target && isDateLikeText(target.innerText || target.textContent || "")) {
+        setTimeout(() => centerActiveCalendarDate("smooth"), 60);
+      }
+    });
+  })();
+</script>
 </body></html>
