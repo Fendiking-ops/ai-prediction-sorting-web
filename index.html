@@ -486,126 +486,6 @@
   })();
 </script>
 
-
-
-
-
-
-<!-- Valence Calendar Active-Date Auto-Center (Additive) -->
-<script id="valence-calendar-autocenter">
-  (function () {
-    function isDateLikeText(txt) {
-      const t = (txt || "").trim();
-      return /^20\d{2}-\d{2}-\d{2}$/.test(t) || /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun)\b/i.test(t);
-    }
-
-    function findActiveDateEl() {
-      const selectors = [
-        "[class*='date'] .active",
-        "[class*='calendar'] .active",
-        "[class*='date-bar'] .active",
-        "[class*='date-strip'] .active",
-        "[class*='date'] [aria-selected='true']",
-        "[class*='calendar'] [aria-selected='true']",
-        "[class*='date'] [aria-current='date']",
-        "[class*='date'] .selected",
-        "[class*='calendar'] .selected",
-        "button.active",
-        "a.active",
-        ".date-btn.active",
-        ".date-pill.active",
-        ".date-chip.active"
-      ];
-
-      for (const sel of selectors) {
-        try {
-          const matches = Array.from(document.querySelectorAll(sel));
-          const hit = matches.find(el => {
-            const rect = el.getBoundingClientRect();
-            return rect.width > 0 && isDateLikeText(el.innerText || el.textContent || "");
-          });
-          if (hit) return hit;
-        } catch (e) {}
-      }
-
-      // Fallback: check elements with date-like text that have inline active/highlighted styling
-      const candidates = Array.from(document.querySelectorAll("button, a, div, span"));
-      for (const el of candidates) {
-        const txt = (el.innerText || el.textContent || "").trim();
-        if (!isDateLikeText(txt) || txt.length > 24) continue;
-        const styleAttr = (el.getAttribute("style") || "").toLowerCase();
-        const cls = (el.className || "").toString().toLowerCase();
-        if (
-          cls.includes("active") ||
-          cls.includes("selected") ||
-          cls.includes("current") ||
-          styleAttr.includes("background") ||
-          styleAttr.includes("#2563eb") ||
-          styleAttr.includes("#0284c7") ||
-          styleAttr.includes("#38bdf8")
-        ) {
-          const rect = el.getBoundingClientRect();
-          if (rect.width > 0 && el.parentElement && el.parentElement.scrollWidth > el.parentElement.clientWidth) {
-            return el;
-          }
-        }
-      }
-      return null;
-    }
-
-    function findScrollableStrip(activeEl) {
-      let cur = activeEl ? activeEl.parentElement : null;
-      while (cur && cur !== document.body && cur !== document.documentElement) {
-        if (cur.scrollWidth > cur.clientWidth + 4) {
-          return cur;
-        }
-        cur = cur.parentElement;
-      }
-
-      const fallbackStrips = Array.from(
-        document.querySelectorAll("[class*='date'], [class*='calendar'], [class*='strip'], [class*='bar']")
-      );
-      return fallbackStrips.find(el => el.scrollWidth > el.clientWidth + 4) || null;
-    }
-
-    function centerActiveCalendarDate(behavior) {
-      const activeEl = findActiveDateEl();
-      if (!activeEl) return false;
-      const strip = findScrollableStrip(activeEl);
-      if (!strip) return false;
-
-      const stripRect = strip.getBoundingClientRect();
-      const elRect = activeEl.getBoundingClientRect();
-      const currentLeft = strip.scrollLeft;
-      const elCenterInStrip = (elRect.left - stripRect.left) + currentLeft + (elRect.width / 2);
-      const targetScrollLeft = Math.max(0, elCenterInStrip - (strip.clientWidth / 2));
-
-      strip.scrollTo({
-        left: targetScrollLeft,
-        behavior: behavior || "auto"
-      });
-      return true;
-    }
-
-    function scheduleCenter(retriesLeft) {
-      if (centerActiveCalendarDate("auto")) return;
-      if (retriesLeft > 0) {
-        setTimeout(() => scheduleCenter(retriesLeft - 1), 180);
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => scheduleCenter(8));
-    window.addEventListener("load", () => scheduleCenter(8));
-    window.addEventListener("pageshow", () => scheduleCenter(8));
-    document.addEventListener("click", (ev) => {
-      const target = ev.target && ev.target.closest("button, a, div, span");
-      if (target && isDateLikeText(target.innerText || target.textContent || "")) {
-        setTimeout(() => centerActiveCalendarDate("smooth"), 60);
-      }
-    });
-  })();
-</script>
-
 <!-- Valence Today-Default & Bottom-Placement Guard (Freemium) -->
 <script id="valence-today-and-placement">
   (function () {
@@ -889,6 +769,170 @@
       if (document.body) {
         mo.observe(document.body, { childList: true, subtree: true });
       }
+    });
+  })();
+</script>
+
+<!-- Valence Daily (Today) Handover & Selected-Date Centering (Freemium & Premium) -->
+<script id="valence-daily-today-and-center">
+  (function () {
+    const DATE_ONLY_RE = /^(\d{4}-\d{2}-\d{2})(?:\s*\(Today\))?$/i;
+
+    function getTodayISO() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function getDatePill(el) {
+      if (!el) return null;
+      const pill = el.closest("button, a, div, span, li") || el;
+      const txt = ((pill.innerText || pill.textContent) || "").trim();
+      return DATE_ONLY_RE.test(txt) ? pill : null;
+    }
+
+    function syncTodayLabelsEveryDay() {
+      const todayISO = getTodayISO();
+      const all = Array.from(document.querySelectorAll("button, a, div, span, li"));
+      for (const el of all) {
+        if (el.children && el.children.length > 0) continue;
+        const raw = (el.textContent || "").trim();
+        const match = raw.match(DATE_ONLY_RE);
+        if (!match) continue;
+        const dateVal = match[1];
+        const expected = dateVal === todayISO ? `${dateVal} (Today)` : dateVal;
+        if (raw !== expected) {
+          el.textContent = expected;
+        }
+      }
+    }
+
+    function isPillSelected(pill) {
+      if (!pill) return false;
+      const cls = (pill.className || "").toString().toLowerCase();
+      if (
+        pill.getAttribute("aria-selected") === "true" ||
+        pill.getAttribute("aria-current") === "date" ||
+        /\b(active|selected|current)\b/.test(cls)
+      ) {
+        return true;
+      }
+      const childActive = pill.querySelector("[aria-selected='true'], [aria-current='date'], .active, .selected, .current");
+      if (childActive) return true;
+
+      const cs = window.getComputedStyle(pill);
+      const bg = cs.backgroundColor || "";
+      const rgb = bg.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+      if (rgb) {
+        const r = Number(rgb[1]);
+        const g = Number(rgb[2]);
+        const b = Number(rgb[3]);
+        if (b > 135 && b > r + 35 && !(r > 230 && g > 230 && b > 230)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function findActivePill(preferredPill) {
+      if (preferredPill && preferredPill.isConnected) {
+        const rect = preferredPill.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) return preferredPill;
+      }
+      const all = Array.from(document.querySelectorAll("button, a, div, span, li"));
+      for (const el of all) {
+        const pill = getDatePill(el);
+        if (!pill) continue;
+        const rect = pill.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) continue;
+        if (isPillSelected(pill)) return pill;
+      }
+      return null;
+    }
+
+    function findCalendarScroller(pill) {
+      let cur = pill ? pill.parentElement : null;
+      while (cur && cur !== document.body && cur !== document.documentElement) {
+        if (cur.scrollWidth > cur.clientWidth + 2) {
+          return cur;
+        }
+        cur = cur.parentElement;
+      }
+      const fallback = Array.from(
+        document.querySelectorAll("[class*='date'], [class*='calendar'], [class*='strip'], [class*='bar'], [class*='scroll']")
+      );
+      return fallback.find(el => el.scrollWidth > el.clientWidth + 2) || null;
+    }
+
+    function centerPill(pill, behavior) {
+      const targetPill = findActivePill(pill);
+      if (!targetPill) return false;
+      const scroller = findCalendarScroller(targetPill);
+      if (!scroller) return false;
+
+      const scrollerRect = scroller.getBoundingClientRect();
+      const pillRect = targetPill.getBoundingClientRect();
+      const pillCenterOffset = (pillRect.left - scrollerRect.left) + scroller.scrollLeft + (pillRect.width / 2);
+      const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      const centeredLeft = Math.min(maxScroll, Math.max(0, pillCenterOffset - (scroller.clientWidth / 2)));
+
+      scroller.scrollLeft = centeredLeft;
+      if (typeof scroller.scrollTo === "function") {
+        scroller.scrollTo({ left: centeredLeft, behavior: behavior || "auto" });
+      }
+      return true;
+    }
+
+    function runPass(preferredPill, behavior) {
+      syncTodayLabelsEveryDay();
+      return centerPill(preferredPill, behavior || "auto");
+    }
+
+    function retrySequence(count, behavior, preferredPill) {
+      runPass(preferredPill, behavior);
+      if (count > 0) {
+        setTimeout(() => retrySequence(count - 1, behavior, preferredPill), 160);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => retrySequence(14, "auto", null));
+    window.addEventListener("load", () => {
+      retrySequence(10, "auto", null);
+      setTimeout(() => retrySequence(6, "smooth", null), 240);
+    });
+    window.addEventListener("pageshow", () => {
+      retrySequence(10, "auto", null);
+      setTimeout(() => retrySequence(6, "smooth", null), 240);
+    });
+
+    document.addEventListener("click", (ev) => {
+      const pill = getDatePill(ev.target);
+      if (!pill) return;
+      setTimeout(() => runPass(pill, "smooth"), 30);
+      setTimeout(() => runPass(pill, "smooth"), 140);
+      setTimeout(() => runPass(pill, "smooth"), 300);
+    }, true);
+
+    // Re-check every minute in case the user leaves the tab open across midnight into a new day
+    setInterval(() => {
+      runPass(null, "smooth");
+    }, 60000);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if (!document.body) return;
+      let timer = null;
+      const mo = new MutationObserver(() => {
+        clearTimeout(timer);
+        timer = setTimeout(() => runPass(null, "auto"), 80);
+      });
+      mo.observe(document.body, {
+        attributes: true,
+        attributeFilter: ["class", "style", "aria-selected", "aria-current"],
+        childList: true,
+        subtree: true
+      });
     });
   })();
 </script>
