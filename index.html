@@ -936,4 +936,195 @@
     });
   })();
 </script>
+
+<!-- Valence Pull-to-Refresh Current-Date & 5s Double-Refresh Handler -->
+<script id="valence-pull-refresh-today">
+  (function () {
+    const DATE_TAB_RE = /^(\d{4}-\d{2}-\d{2})(?:\s*\(Today\))?$/i;
+    const REFRESH_KEY = "valence_pull_refresh_timestamps_v1";
+    const WINDOW_MS = 5000;
+
+    let touchStartY = 0;
+    let pullRecordedThisGesture = false;
+    let userPickedDateManual = false;
+
+    function getTodayISO() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function readRefreshTimestamps(nowMs) {
+      try {
+        const raw = localStorage.getItem(REFRESH_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) return [];
+        return arr.filter(ts => typeof ts === "number" && (nowMs - ts) <= WINDOW_MS);
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function recordRefreshEvent() {
+      const nowMs = Date.now();
+      const recent = readRefreshTimestamps(nowMs);
+      recent.push(nowMs);
+      try {
+        localStorage.setItem(REFRESH_KEY, JSON.stringify(recent));
+      } catch (e) {}
+      return recent.length;
+    }
+
+    function hasRecentRefreshWithin5s() {
+      const nowMs = Date.now();
+      const recent = readRefreshTimestamps(nowMs);
+      return recent.length >= 1;
+    }
+
+    function syncTodayLabels() {
+      const todayISO = getTodayISO();
+      const els = Array.from(document.querySelectorAll("button, a, div, span, li"));
+      for (const el of els) {
+        if (el.children && el.children.length > 0) continue;
+        const txt = (el.textContent || "").trim();
+        const m = txt.match(DATE_TAB_RE);
+        if (!m) continue;
+        const iso = m[1];
+        const targetText = iso === todayISO ? `${iso} (Today)` : iso;
+        if (txt !== targetText) {
+          el.textContent = targetText;
+        }
+      }
+    }
+
+    function getDatePill(el) {
+      if (!el) return null;
+      const pill = el.closest("button, a, div, span, li") || el;
+      const txt = ((pill.innerText || pill.textContent) || "").trim();
+      return DATE_TAB_RE.test(txt) ? pill : null;
+    }
+
+    function findScroller(pill) {
+      let cur = pill ? pill.parentElement : null;
+      while (cur && cur !== document.body && cur !== document.documentElement) {
+        if (cur.scrollWidth > cur.clientWidth + 2) return cur;
+        cur = cur.parentElement;
+      }
+      return null;
+    }
+
+    function centerPill(pill, behavior) {
+      if (!pill) return;
+      const scroller = findScroller(pill);
+      if (!scroller) return;
+      const sRect = scroller.getBoundingClientRect();
+      const pRect = pill.getBoundingClientRect();
+      const centerPos = (pRect.left - sRect.left) + scroller.scrollLeft + (pRect.width / 2);
+      const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      const left = Math.min(maxScroll, Math.max(0, centerPos - (scroller.clientWidth / 2)));
+      scroller.scrollLeft = left;
+      if (typeof scroller.scrollTo === "function") {
+        scroller.scrollTo({ left: left, behavior: behavior || "auto" });
+      }
+    }
+
+    function activateCurrentDateView(behavior) {
+      syncTodayLabels();
+      const todayISO = getTodayISO();
+      const pills = Array.from(document.querySelectorAll("button, a, div, span, li"))
+        .map(el => getDatePill(el))
+        .filter((el, idx, arr) => el && arr.indexOf(el) === idx);
+
+      let targetPill = pills.find(p => {
+        const t = ((p.innerText || p.textContent) || "").trim();
+        const m = t.match(DATE_TAB_RE);
+        return m && m[1] === todayISO;
+      });
+
+      if (!targetPill && pills.length) {
+        const dated = pills
+          .map(p => {
+            const m = (((p.innerText || p.textContent) || "").trim()).match(DATE_TAB_RE);
+            return { pill: p, iso: m ? m[1] : "" };
+          })
+          .filter(x => x.iso)
+          .sort((a, b) => a.iso.localeCompare(b.iso));
+        const onOrBefore = dated.filter(x => x.iso <= todayISO);
+        targetPill = onOrBefore.length ? onOrBefore[onOrBefore.length - 1].pill : (dated[dated.length - 1] && dated[dated.length - 1].pill);
+      }
+
+      if (targetPill) {
+        targetPill.click();
+        setTimeout(() => centerPill(targetPill, behavior || "auto"), 50);
+        setTimeout(() => centerPill(targetPill, behavior || "auto"), 180);
+        return true;
+      }
+      return false;
+    }
+
+    function applyRefreshRule(retries) {
+      syncTodayLabels();
+      // Single or double pull-to-refresh within 5 seconds always displays the current date
+      if (hasRecentRefreshWithin5s() || !userPickedDateManual) {
+        const ok = activateCurrentDateView("auto");
+        if (!ok && retries > 0) {
+          setTimeout(() => applyRefreshRule(retries - 1), 180);
+        }
+      }
+    }
+
+    document.addEventListener("touchstart", (ev) => {
+      if (window.scrollY <= 2 && ev.touches && ev.touches.length === 1) {
+        touchStartY = ev.touches[0].clientY;
+        pullRecordedThisGesture = false;
+      } else {
+        touchStartY = 0;
+      }
+    }, { passive: true });
+
+    document.addEventListener("touchmove", (ev) => {
+      if (!touchStartY || pullRecordedThisGesture) return;
+      if (window.scrollY <= 2 && ev.touches && ev.touches.length === 1) {
+        const deltaY = ev.touches[0].clientY - touchStartY;
+        if (deltaY >= 75) {
+          pullRecordedThisGesture = true;
+          recordRefreshEvent();
+        }
+      }
+    }, { passive: true });
+
+    window.addEventListener("pagehide", () => {
+      if (!pullRecordedThisGesture && window.scrollY <= 8) {
+        recordRefreshEvent();
+      }
+    });
+
+    window.addEventListener("beforeunload", () => {
+      if (!pullRecordedThisGesture && window.scrollY <= 8) {
+        recordRefreshEvent();
+      }
+    });
+
+    document.addEventListener("click", (ev) => {
+      const pill = getDatePill(ev.target);
+      if (pill) {
+        userPickedDateManual = true;
+        setTimeout(() => centerPill(pill, "smooth"), 40);
+        setTimeout(() => centerPill(pill, "smooth"), 160);
+      }
+    }, true);
+
+    window.addEventListener("DOMContentLoaded", () => applyRefreshRule(12));
+    window.addEventListener("load", () => setTimeout(() => applyRefreshRule(8), 100));
+    window.addEventListener("pageshow", () => {
+      // If a pull-to-refresh happened within 5s (1x or 2x), force current date view immediately
+      if (hasRecentRefreshWithin5s()) {
+        userPickedDateManual = false;
+      }
+      applyRefreshRule(10);
+    });
+  })();
+</script>
 </body></html>
