@@ -605,4 +605,125 @@
     });
   })();
 </script>
+
+<!-- Valence Today-Default & Bottom-Placement Guard (Freemium) -->
+<script id="valence-today-and-placement">
+  (function () {
+    function getTodayISO() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function moveSubCardToBottom() {
+      const card = document.getElementById("valence-sub-card");
+      if (!card) return;
+      const styleTag = document.getElementById("valence-sub-styles");
+      const footer = document.querySelector("footer, [class*='sticky-footer'], [id*='footer']");
+      const mainContainer =
+        document.querySelector("main, #app, .container, .main-content, .content") ||
+        document.body;
+
+      if (styleTag && styleTag.parentElement !== document.head && document.head) {
+        document.head.appendChild(styleTag);
+      }
+
+      if (mainContainer && mainContainer !== document.body) {
+        if (card.parentElement !== mainContainer || mainContainer.lastElementChild !== card) {
+          mainContainer.appendChild(card);
+        }
+      } else if (footer && footer.parentElement === document.body) {
+        if (card.nextElementSibling !== footer) {
+          document.body.insertBefore(card, footer);
+        }
+      } else if (document.body.lastElementChild !== card) {
+        // Keep script tags at end if desired, or place card before trailing scripts
+        const firstTrailingScript = Array.from(document.body.children).find(
+          el => el.tagName === "SCRIPT" && el.id !== "valence-today-and-placement"
+        );
+        if (firstTrailingScript && card.nextElementSibling !== firstTrailingScript) {
+          document.body.insertBefore(card, firstTrailingScript);
+        }
+      }
+    }
+
+    function findDateTabs() {
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      const els = Array.from(document.querySelectorAll("button, a, div, span, li"));
+      return els.filter(el => {
+        if (el.closest("#valence-sub-card")) return false;
+        const txt = (el.innerText || el.textContent || "").trim();
+        if (!dateRegex.test(txt)) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.width > 20 && rect.height > 14;
+      });
+    }
+
+    function isTabActive(el) {
+      const cls = (el.className || "").toString().toLowerCase();
+      const ariaSelected = el.getAttribute("aria-selected") === "true";
+      const ariaCurrent = el.getAttribute("aria-current") === "date";
+      return ariaSelected || ariaCurrent || /\b(active|selected|current)\b/.test(cls);
+    }
+
+    function selectTodayIfNeeded() {
+      const tabs = findDateTabs();
+      if (!tabs.length) return false;
+
+      const today = getTodayISO();
+      let target = tabs.find(t => (t.innerText || t.textContent || "").trim() === today);
+
+      // If today's exact date tab isn't present, pick the closest/latest date tab available
+      if (!target) {
+        const sorted = [...tabs].sort((a, b) =>
+          (a.innerText || a.textContent || "").trim().localeCompare(
+            (b.innerText || b.textContent || "").trim()
+          )
+        );
+        const onOrBefore = sorted.filter(
+          t => (t.innerText || t.textContent || "").trim() <= today
+        );
+        target = onOrBefore.length ? onOrBefore[onOrBefore.length - 1] : sorted[sorted.length - 1];
+      }
+
+      if (target && !isTabActive(target)) {
+        target.click();
+      }
+
+      if (target && target.parentElement && target.parentElement.scrollWidth > target.parentElement.clientWidth) {
+        const strip = target.parentElement;
+        const stripRect = strip.getBoundingClientRect();
+        const elRect = target.getBoundingClientRect();
+        const targetLeft = (elRect.left - stripRect.left) + strip.scrollLeft + (elRect.width / 2) - (strip.clientWidth / 2);
+        strip.scrollTo({ left: Math.max(0, targetLeft), behavior: "auto" });
+      }
+      return true;
+    }
+
+    function runGuards(retries) {
+      moveSubCardToBottom();
+      const selected = selectTodayIfNeeded();
+      moveSubCardToBottom();
+      if (!selected && retries > 0) {
+        setTimeout(() => runGuards(retries - 1), 200);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => runGuards(10));
+    window.addEventListener("load", () => setTimeout(() => runGuards(6), 120));
+    window.addEventListener("pageshow", () => setTimeout(() => runGuards(6), 120));
+
+    const observer = new MutationObserver(() => {
+      moveSubCardToBottom();
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+      if (document.body) {
+        observer.observe(document.body, { childList: true, subtree: true });
+        setTimeout(() => observer.disconnect(), 8000);
+      }
+    });
+  })();
+</script>
 </body></html>
