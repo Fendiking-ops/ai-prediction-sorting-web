@@ -35,6 +35,38 @@
             if(def) filterDate(def);
         };
     </script>
+
+<!-- Shared Cobalt & Cyan Page Color Theme -->
+<style id="valence-page-cobalt-theme">
+  :root {
+    --v-bg-deep: #041636;
+    --v-bg-mid: #082d6b;
+    --v-surface: rgba(11, 56, 132, 0.72);
+    --v-surface-elevated: rgba(15, 72, 166, 0.82);
+    --v-cyan-glow: #38bdf8;
+    --v-cyan-bright: #7dd3fc;
+    --v-border-cyan: rgba(56, 189, 248, 0.42);
+    --v-text-primary: #f8fafc;
+    --v-text-muted: #bfdbfe;
+  }
+  html, body {
+    background:
+      radial-gradient(circle at 82% 14%, rgba(56, 189, 248, 0.22) 0%, transparent 42%),
+      radial-gradient(circle at 15% 78%, rgba(29, 78, 216, 0.35) 0%, transparent 48%),
+      linear-gradient(155deg, #072863 0%, #051c47 52%, #031029 100%) !important;
+    color: var(--v-text-primary) !important;
+  }
+  body a {
+    color: var(--v-cyan-bright);
+  }
+  body table, body .card, body .panel, body .box, body details {
+    border-color: rgba(56, 189, 248, 0.24);
+  }
+  body th, body summary {
+    background-color: rgba(10, 52, 124, 0.78);
+    color: #f8fafc;
+  }
+</style>
 </head><body><div class="container">
 <a href="[https://wa.me/2349134305166](https://wa.me/2349134305166)" target="_blank" style="text-decoration: none; display: block; margin-bottom: 15px;"><div style="background-color: #ffffff; border: 2px dashed #3b82f6; color: #1e40af; padding: 14px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">📢 HEADER BILLBOARD AD SLOT<br><span style="color:#2563eb; font-size:11px; font-weight:600;">Tap to Rent Ad Space</span></div></a>
 <div class="header-box"><h2>Valence AI - True Quantitative Engine</h2><p style="font-size: 12px; color: #78350f; margin:0;">Integrating Live APIs, Tier-Weighted Proxies, and dynamic Poisson distributions to return exact value indexes and realistic match scores.</p></div>
@@ -134,38 +166,7 @@
       });
     })();
     </script>
-<!-- Shared Cobalt & Cyan Page Color Theme -->
-<style id="valence-page-cobalt-theme">
-  :root {
-    --v-bg-deep: #041636;
-    --v-bg-mid: #082d6b;
-    --v-surface: rgba(11, 56, 132, 0.72);
-    --v-surface-elevated: rgba(15, 72, 166, 0.82);
-    --v-cyan-glow: #38bdf8;
-    --v-cyan-bright: #7dd3fc;
-    --v-border-cyan: rgba(56, 189, 248, 0.42);
-    --v-text-primary: #f8fafc;
-    --v-text-muted: #bfdbfe;
-  }
-  html, body {
-    background:
-      radial-gradient(circle at 82% 14%, rgba(56, 189, 248, 0.22) 0%, transparent 42%),
-      radial-gradient(circle at 15% 78%, rgba(29, 78, 216, 0.35) 0%, transparent 48%),
-      linear-gradient(155deg, #072863 0%, #051c47 52%, #031029 100%) !important;
-    color: var(--v-text-primary) !important;
-  }
-  body a {
-    color: var(--v-cyan-bright);
-  }
-  body table, body .card, body .panel, body .box, body details {
-    border-color: rgba(56, 189, 248, 0.24);
-  }
-  body th, body summary {
-    background-color: rgba(10, 52, 124, 0.78);
-    color: #f8fafc;
-  }
-</style>
-<!-- Valence AI Elite Access Subscription Widget (Cobalt & Cyan Theme) -->
+<!-- Valence AI Elite Access Subscription Widget (Freemium Only + 30-Day Pass) -->
 <style id="valence-sub-styles">
   #valence-sub-card {
     position: relative;
@@ -325,6 +326,27 @@
     color: #bfdbfe;
     text-align: center;
   }
+  #valence-sub-card .vsc-pass-box {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(4, 20, 52, 0.78);
+    border: 1px solid rgba(125, 211, 252, 0.28);
+    font-size: 12px;
+    color: #bae6fd;
+    text-align: center;
+  }
+  #valence-sub-card .vsc-pass-link {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.18);
+    border: 1px solid rgba(125, 211, 252, 0.5);
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: none;
+  }
 </style>
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <div id="valence-sub-card">
@@ -342,47 +364,128 @@
     Subscribe Now (₦10,000/mo)
   </button>
   <p id="sub-status-msg"></p>
+  <div id="valence-pass-status" class="vsc-pass-box" style="display:none;"></div>
 </div>
 <script>
   (function () {
-    const savedEmail = localStorage.getItem('valence_subscriber_email');
-    const emailEl = document.getElementById('subscriber-email');
-    if (savedEmail && emailEl && !emailEl.value) {
-      emailEl.value = savedEmail;
-    }
-  })();
+    const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+    // Add owner email(s) in lowercase if you want owner bypass on this browser
+    const OWNER_EMAILS = [];
+    const PREMIUM_URL = "../ai-prediction-admin-web/index.html";
 
-  function initiatePaystackSubscription() {
-    const emailInput = document.getElementById('subscriber-email').value.trim();
-    const statusMsg = document.getElementById('sub-status-msg');
-    if (!emailInput || !emailInput.includes('@')) {
-      statusMsg.style.color = '#f87171';
-      statusMsg.textContent = 'Please enter a valid email address.';
-      return;
-    }
-    statusMsg.style.color = '#7dd3fc';
-    statusMsg.textContent = 'Opening secure Paystack checkout...';
-    const handler = PaystackPop.setup({
-      key: 'pk_live_3b5aff686eaff612d0e6315804bb7679c6a2b6ed',
-      email: emailInput,
-      amount: 1000000,
-      currency: 'NGN',
-      plan: 'PLN_yhk5z4rnocx4yjk',
-      ref: 'VAL_' + Math.floor((Math.random() * 1000000000) + 1),
-      callback: function(response) {
-        statusMsg.style.color = '#4ade80';
-        statusMsg.textContent = 'Payment verified! Ref: ' + response.reference + '. Unlocking access...';
-        localStorage.setItem('valence_subscriber_email', emailInput);
-        setTimeout(() => { location.reload(); }, 2000);
-      },
-      onClose: function() {
-        statusMsg.style.color = '#bfdbfe';
-        statusMsg.textContent = 'Checkout closed. Click Subscribe whenever you are ready.';
+    function getSubRecord() {
+      try {
+        const raw = localStorage.getItem("valence_elite_subscription");
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
       }
-    });
-    handler.openIframe();
-  }
+    }
+
+    function setSubRecord(email, ref) {
+      const now = Date.now();
+      const expiresAt = now + THIRTY_DAYS_MS;
+      const record = {
+        email: (email || "").trim().toLowerCase(),
+        ref: ref || "",
+        activatedAt: now,
+        expiresAt: expiresAt
+      };
+      localStorage.setItem("valence_subscriber_email", record.email);
+      localStorage.setItem("valence_elite_subscription", JSON.stringify(record));
+      return record;
+    }
+
+    function checkAccessStatus(emailOverride) {
+      const savedEmail = (emailOverride || localStorage.getItem("valence_subscriber_email") || "").trim().toLowerCase();
+      if (savedEmail && OWNER_EMAILS.includes(savedEmail)) {
+        return { active: true, reason: "owner", email: savedEmail, expiresAt: null };
+      }
+      const rec = getSubRecord();
+      if (!rec || !rec.expiresAt) {
+        return { active: false, reason: "none", email: savedEmail };
+      }
+      if (Date.now() >= Number(rec.expiresAt)) {
+        localStorage.removeItem("valence_elite_subscription");
+        return { active: false, reason: "expired", email: rec.email || savedEmail };
+      }
+      return { active: true, reason: "paid", email: rec.email || savedEmail, expiresAt: Number(rec.expiresAt) };
+    }
+
+    function syncSubscriptionUI() {
+      const emailEl = document.getElementById("subscriber-email");
+      const passBox = document.getElementById("valence-pass-status");
+      const statusMsg = document.getElementById("sub-status-msg");
+      const status = checkAccessStatus();
+
+      if (status.email && emailEl && !emailEl.value) {
+        emailEl.value = status.email;
+      }
+
+      if (!passBox) return;
+
+      if (status.active) {
+        const expLabel = status.reason === "owner"
+          ? "Owner Access Active"
+          : "Active for 30-day cycle · Expires " + new Date(status.expiresAt).toLocaleDateString();
+        passBox.style.display = "block";
+        passBox.innerHTML =
+          "<div><strong>" + expLabel + "</strong> (" + (status.email || "Verified") + ")</div>" +
+          "<a class='vsc-pass-link' href='" + PREMIUM_URL + "'>Open 100% Premium Access →</a>";
+      } else {
+        passBox.style.display = "none";
+        passBox.innerHTML = "";
+        if (status.reason === "expired" && statusMsg && !statusMsg.textContent) {
+          statusMsg.style.color = "#fbbf24";
+          statusMsg.textContent = "Your 30-day subscription period has ended. Reverted to Freemium—subscribe again to renew.";
+        }
+      }
+    }
+
+    window.initiatePaystackSubscription = function () {
+      const emailInputEl = document.getElementById("subscriber-email");
+      const emailInput = emailInputEl ? emailInputEl.value.trim() : "";
+      const statusMsg = document.getElementById("sub-status-msg");
+      if (!emailInput || !emailInput.includes("@")) {
+        statusMsg.style.color = "#f87171";
+        statusMsg.textContent = "Please enter a valid email address.";
+        return;
+      }
+      if (OWNER_EMAILS.includes(emailInput.toLowerCase())) {
+        setSubRecord(emailInput, "OWNER_BYPASS");
+        statusMsg.style.color = "#4ade80";
+        statusMsg.textContent = "Owner access verified. Unlocking premium access...";
+        syncSubscriptionUI();
+        return;
+      }
+      statusMsg.style.color = "#7dd3fc";
+      statusMsg.textContent = "Opening secure Paystack checkout...";
+      const handler = PaystackPop.setup({
+        key: "pk_live_3b5aff686eaff612d0e6315804bb7679c6a2b6ed",
+        email: emailInput,
+        amount: 1000000,
+        currency: "NGN",
+        plan: "PLN_yhk5z4rnocx4yjk",
+        ref: "VAL_" + Math.floor((Math.random() * 1000000000) + 1),
+        callback: function(response) {
+          setSubRecord(emailInput, response.reference);
+          statusMsg.style.color = "#4ade80";
+          statusMsg.textContent = "Payment verified! Ref: " + response.reference + ". Unlocking 30-day premium access...";
+          syncSubscriptionUI();
+          setTimeout(() => { window.location.href = PREMIUM_URL; }, 1500);
+        },
+        onClose: function() {
+          statusMsg.style.color = "#bfdbfe";
+          statusMsg.textContent = "Checkout closed. Click Subscribe whenever you are ready.";
+        }
+      });
+      handler.openIframe();
+    };
+
+    syncSubscriptionUI();
+  })();
 </script>
+
 
 
 
