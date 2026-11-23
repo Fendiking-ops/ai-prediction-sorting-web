@@ -486,127 +486,6 @@
   })();
 </script>
 
-<!-- Valence Today-Default & Bottom-Placement Guard (Freemium) -->
-<script id="valence-today-and-placement">
-  (function () {
-    function getTodayISO() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, "0");
-      const d = String(now.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-
-    function moveSubCardToBottom() {
-      const card = document.getElementById("valence-sub-card");
-      if (!card) return;
-      const styleTag = document.getElementById("valence-sub-styles");
-      const footer = document.querySelector("footer, [class*='sticky-footer'], [id*='footer']");
-      const mainContainer =
-        document.querySelector("main, #app, .container, .main-content, .content") ||
-        document.body;
-
-      if (styleTag && styleTag.parentElement !== document.head && document.head) {
-        document.head.appendChild(styleTag);
-      }
-
-      if (mainContainer && mainContainer !== document.body) {
-        if (card.parentElement !== mainContainer || mainContainer.lastElementChild !== card) {
-          mainContainer.appendChild(card);
-        }
-      } else if (footer && footer.parentElement === document.body) {
-        if (card.nextElementSibling !== footer) {
-          document.body.insertBefore(card, footer);
-        }
-      } else if (document.body.lastElementChild !== card) {
-        // Keep script tags at end if desired, or place card before trailing scripts
-        const firstTrailingScript = Array.from(document.body.children).find(
-          el => el.tagName === "SCRIPT" && el.id !== "valence-today-and-placement"
-        );
-        if (firstTrailingScript && card.nextElementSibling !== firstTrailingScript) {
-          document.body.insertBefore(card, firstTrailingScript);
-        }
-      }
-    }
-
-    function findDateTabs() {
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-      const els = Array.from(document.querySelectorAll("button, a, div, span, li"));
-      return els.filter(el => {
-        if (el.closest("#valence-sub-card")) return false;
-        const txt = (el.innerText || el.textContent || "").trim();
-        if (!dateRegex.test(txt)) return false;
-        const rect = el.getBoundingClientRect();
-        return rect.width > 20 && rect.height > 14;
-      });
-    }
-
-    function isTabActive(el) {
-      const cls = (el.className || "").toString().toLowerCase();
-      const ariaSelected = el.getAttribute("aria-selected") === "true";
-      const ariaCurrent = el.getAttribute("aria-current") === "date";
-      return ariaSelected || ariaCurrent || /\b(active|selected|current)\b/.test(cls);
-    }
-
-    function selectTodayIfNeeded() {
-      const tabs = findDateTabs();
-      if (!tabs.length) return false;
-
-      const today = getTodayISO();
-      let target = tabs.find(t => (t.innerText || t.textContent || "").trim() === today);
-
-      // If today's exact date tab isn't present, pick the closest/latest date tab available
-      if (!target) {
-        const sorted = [...tabs].sort((a, b) =>
-          (a.innerText || a.textContent || "").trim().localeCompare(
-            (b.innerText || b.textContent || "").trim()
-          )
-        );
-        const onOrBefore = sorted.filter(
-          t => (t.innerText || t.textContent || "").trim() <= today
-        );
-        target = onOrBefore.length ? onOrBefore[onOrBefore.length - 1] : sorted[sorted.length - 1];
-      }
-
-      if (target && !isTabActive(target)) {
-        target.click();
-      }
-
-      if (target && target.parentElement && target.parentElement.scrollWidth > target.parentElement.clientWidth) {
-        const strip = target.parentElement;
-        const stripRect = strip.getBoundingClientRect();
-        const elRect = target.getBoundingClientRect();
-        const targetLeft = (elRect.left - stripRect.left) + strip.scrollLeft + (elRect.width / 2) - (strip.clientWidth / 2);
-        strip.scrollTo({ left: Math.max(0, targetLeft), behavior: "auto" });
-      }
-      return true;
-    }
-
-    function runGuards(retries) {
-      moveSubCardToBottom();
-      const selected = selectTodayIfNeeded();
-      moveSubCardToBottom();
-      if (!selected && retries > 0) {
-        setTimeout(() => runGuards(retries - 1), 200);
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => runGuards(10));
-    window.addEventListener("load", () => setTimeout(() => runGuards(6), 120));
-    window.addEventListener("pageshow", () => setTimeout(() => runGuards(6), 120));
-
-    const observer = new MutationObserver(() => {
-      moveSubCardToBottom();
-    });
-    document.addEventListener("DOMContentLoaded", () => {
-      if (document.body) {
-        observer.observe(document.body, { childList: true, subtree: true });
-        setTimeout(() => observer.disconnect(), 8000);
-      }
-    });
-  })();
-</script>
-
 <!-- Valence Every-4-Matches Ad Banner Injector (Freemium & Premium) -->
 <style id="valence-every4-ad-styles">
   .valence-mid-ad-banner {
@@ -773,180 +652,17 @@
   })();
 </script>
 
-<!-- Valence Daily (Today) Handover & Selected-Date Centering (Freemium & Premium) -->
-<script id="valence-daily-today-and-center">
+<!-- Valence Unified Date, (Today) Tag & 5s Pull-to-Refresh Controller -->
+<script id="valence-refresh-and-date-controller">
   (function () {
-    const DATE_ONLY_RE = /^(\d{4}-\d{2}-\d{2})(?:\s*\(Today\))?$/i;
-
-    function getTodayISO() {
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth() + 1).padStart(2, "0");
-      const d = String(now.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-
-    function getDatePill(el) {
-      if (!el) return null;
-      const pill = el.closest("button, a, div, span, li") || el;
-      const txt = ((pill.innerText || pill.textContent) || "").trim();
-      return DATE_ONLY_RE.test(txt) ? pill : null;
-    }
-
-    function syncTodayLabelsEveryDay() {
-      const todayISO = getTodayISO();
-      const all = Array.from(document.querySelectorAll("button, a, div, span, li"));
-      for (const el of all) {
-        if (el.children && el.children.length > 0) continue;
-        const raw = (el.textContent || "").trim();
-        const match = raw.match(DATE_ONLY_RE);
-        if (!match) continue;
-        const dateVal = match[1];
-        const expected = dateVal === todayISO ? `${dateVal} (Today)` : dateVal;
-        if (raw !== expected) {
-          el.textContent = expected;
-        }
-      }
-    }
-
-    function isPillSelected(pill) {
-      if (!pill) return false;
-      const cls = (pill.className || "").toString().toLowerCase();
-      if (
-        pill.getAttribute("aria-selected") === "true" ||
-        pill.getAttribute("aria-current") === "date" ||
-        /\b(active|selected|current)\b/.test(cls)
-      ) {
-        return true;
-      }
-      const childActive = pill.querySelector("[aria-selected='true'], [aria-current='date'], .active, .selected, .current");
-      if (childActive) return true;
-
-      const cs = window.getComputedStyle(pill);
-      const bg = cs.backgroundColor || "";
-      const rgb = bg.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
-      if (rgb) {
-        const r = Number(rgb[1]);
-        const g = Number(rgb[2]);
-        const b = Number(rgb[3]);
-        if (b > 135 && b > r + 35 && !(r > 230 && g > 230 && b > 230)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    function findActivePill(preferredPill) {
-      if (preferredPill && preferredPill.isConnected) {
-        const rect = preferredPill.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) return preferredPill;
-      }
-      const all = Array.from(document.querySelectorAll("button, a, div, span, li"));
-      for (const el of all) {
-        const pill = getDatePill(el);
-        if (!pill) continue;
-        const rect = pill.getBoundingClientRect();
-        if (rect.width <= 0 || rect.height <= 0) continue;
-        if (isPillSelected(pill)) return pill;
-      }
-      return null;
-    }
-
-    function findCalendarScroller(pill) {
-      let cur = pill ? pill.parentElement : null;
-      while (cur && cur !== document.body && cur !== document.documentElement) {
-        if (cur.scrollWidth > cur.clientWidth + 2) {
-          return cur;
-        }
-        cur = cur.parentElement;
-      }
-      const fallback = Array.from(
-        document.querySelectorAll("[class*='date'], [class*='calendar'], [class*='strip'], [class*='bar'], [class*='scroll']")
-      );
-      return fallback.find(el => el.scrollWidth > el.clientWidth + 2) || null;
-    }
-
-    function centerPill(pill, behavior) {
-      const targetPill = findActivePill(pill);
-      if (!targetPill) return false;
-      const scroller = findCalendarScroller(targetPill);
-      if (!scroller) return false;
-
-      const scrollerRect = scroller.getBoundingClientRect();
-      const pillRect = targetPill.getBoundingClientRect();
-      const pillCenterOffset = (pillRect.left - scrollerRect.left) + scroller.scrollLeft + (pillRect.width / 2);
-      const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-      const centeredLeft = Math.min(maxScroll, Math.max(0, pillCenterOffset - (scroller.clientWidth / 2)));
-
-      scroller.scrollLeft = centeredLeft;
-      if (typeof scroller.scrollTo === "function") {
-        scroller.scrollTo({ left: centeredLeft, behavior: behavior || "auto" });
-      }
-      return true;
-    }
-
-    function runPass(preferredPill, behavior) {
-      syncTodayLabelsEveryDay();
-      return centerPill(preferredPill, behavior || "auto");
-    }
-
-    function retrySequence(count, behavior, preferredPill) {
-      runPass(preferredPill, behavior);
-      if (count > 0) {
-        setTimeout(() => retrySequence(count - 1, behavior, preferredPill), 160);
-      }
-    }
-
-    window.addEventListener("DOMContentLoaded", () => retrySequence(14, "auto", null));
-    window.addEventListener("load", () => {
-      retrySequence(10, "auto", null);
-      setTimeout(() => retrySequence(6, "smooth", null), 240);
-    });
-    window.addEventListener("pageshow", () => {
-      retrySequence(10, "auto", null);
-      setTimeout(() => retrySequence(6, "smooth", null), 240);
-    });
-
-    document.addEventListener("click", (ev) => {
-      const pill = getDatePill(ev.target);
-      if (!pill) return;
-      setTimeout(() => runPass(pill, "smooth"), 30);
-      setTimeout(() => runPass(pill, "smooth"), 140);
-      setTimeout(() => runPass(pill, "smooth"), 300);
-    }, true);
-
-    // Re-check every minute in case the user leaves the tab open across midnight into a new day
-    setInterval(() => {
-      runPass(null, "smooth");
-    }, 60000);
-
-    document.addEventListener("DOMContentLoaded", () => {
-      if (!document.body) return;
-      let timer = null;
-      const mo = new MutationObserver(() => {
-        clearTimeout(timer);
-        timer = setTimeout(() => runPass(null, "auto"), 80);
-      });
-      mo.observe(document.body, {
-        attributes: true,
-        attributeFilter: ["class", "style", "aria-selected", "aria-current"],
-        childList: true,
-        subtree: true
-      });
-    });
-  })();
-</script>
-
-<!-- Valence Pull-to-Refresh Current-Date & 5s Double-Refresh Handler -->
-<script id="valence-pull-refresh-today">
-  (function () {
-    const DATE_TAB_RE = /^(\d{4}-\d{2}-\d{2})(?:\s*\(Today\))?$/i;
-    const REFRESH_KEY = "valence_pull_refresh_timestamps_v1";
+    const DATE_RE = /^(\d{4}-\d{2}-\d{2})(?:\s*\(Today\))?$/i;
+    const REFRESH_TS_KEY = "valence_ptr_timestamps_v2";
+    const LAST_DATE_KEY = "valence_last_viewed_date_v2";
     const WINDOW_MS = 5000;
 
     let touchStartY = 0;
-    let pullRecordedThisGesture = false;
-    let userPickedDateManual = false;
+    let recordedInGesture = false;
+    let enforceTimer = null;
 
     function getTodayISO() {
       const now = new Date();
@@ -956,54 +672,86 @@
       return `${y}-${m}-${d}`;
     }
 
-    function readRefreshTimestamps(nowMs) {
+    function getRecentRefreshes(nowMs) {
       try {
-        const raw = localStorage.getItem(REFRESH_KEY);
+        const raw = localStorage.getItem(REFRESH_TS_KEY);
         const arr = raw ? JSON.parse(raw) : [];
         if (!Array.isArray(arr)) return [];
-        return arr.filter(ts => typeof ts === "number" && (nowMs - ts) <= WINDOW_MS);
+        const valid = arr.filter(t => typeof t === "number" && (nowMs - t) >= 0 && (nowMs - t) <= WINDOW_MS);
+        localStorage.setItem(REFRESH_TS_KEY, JSON.stringify(valid));
+        return valid;
       } catch (e) {
         return [];
       }
     }
 
-    function recordRefreshEvent() {
+    function recordPullRefresh() {
       const nowMs = Date.now();
-      const recent = readRefreshTimestamps(nowMs);
-      recent.push(nowMs);
+      const list = getRecentRefreshes(nowMs);
+      list.push(nowMs);
       try {
-        localStorage.setItem(REFRESH_KEY, JSON.stringify(recent));
+        localStorage.setItem(REFRESH_TS_KEY, JSON.stringify(list));
       } catch (e) {}
-      return recent.length;
+      return list.length;
     }
 
-    function hasRecentRefreshWithin5s() {
-      const nowMs = Date.now();
-      const recent = readRefreshTimestamps(nowMs);
-      return recent.length >= 1;
+    function saveViewedDate(iso) {
+      if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return;
+      try {
+        localStorage.setItem(LAST_DATE_KEY, iso);
+      } catch (e) {}
     }
 
-    function syncTodayLabels() {
-      const todayISO = getTodayISO();
-      const els = Array.from(document.querySelectorAll("button, a, div, span, li"));
-      for (const el of els) {
-        if (el.children && el.children.length > 0) continue;
-        const txt = (el.textContent || "").trim();
-        const m = txt.match(DATE_TAB_RE);
-        if (!m) continue;
-        const iso = m[1];
-        const targetText = iso === todayISO ? `${iso} (Today)` : iso;
-        if (txt !== targetText) {
-          el.textContent = targetText;
-        }
+    function getSavedViewedDate() {
+      try {
+        const val = localStorage.getItem(LAST_DATE_KEY) || "";
+        return /^\d{4}-\d{2}-\d{2}$/.test(val) ? val : "";
+      } catch (e) {
+        return "";
       }
+    }
+
+    function extractISO(el) {
+      if (!el) return "";
+      const txt = ((el.innerText || el.textContent) || "").trim();
+      const m = txt.match(DATE_RE);
+      return m ? m[1] : "";
     }
 
     function getDatePill(el) {
       if (!el) return null;
       const pill = el.closest("button, a, div, span, li") || el;
-      const txt = ((pill.innerText || pill.textContent) || "").trim();
-      return DATE_TAB_RE.test(txt) ? pill : null;
+      return extractISO(pill) ? pill : null;
+    }
+
+    function getAllDatePills() {
+      const nodes = Array.from(document.querySelectorAll("button, a, div, span, li"));
+      const pills = [];
+      for (const n of nodes) {
+        const p = getDatePill(n);
+        if (!p || pills.includes(p)) continue;
+        const rect = p.getBoundingClientRect();
+        if (rect.width > 16 && rect.height > 12) {
+          pills.push(p);
+        }
+      }
+      return pills;
+    }
+
+    function syncTodayLabels() {
+      const todayISO = getTodayISO();
+      const leafNodes = Array.from(document.querySelectorAll("button, a, div, span, li"));
+      for (const el of leafNodes) {
+        if (el.children && el.children.length > 0) continue;
+        const raw = (el.textContent || "").trim();
+        const m = raw.match(DATE_RE);
+        if (!m) continue;
+        const iso = m[1];
+        const nextText = iso === todayISO ? `${iso} (Today)` : iso;
+        if (raw !== nextText) {
+          el.textContent = nextText;
+        }
+      }
     }
 
     function findScroller(pill) {
@@ -1021,110 +769,143 @@
       if (!scroller) return;
       const sRect = scroller.getBoundingClientRect();
       const pRect = pill.getBoundingClientRect();
-      const centerPos = (pRect.left - sRect.left) + scroller.scrollLeft + (pRect.width / 2);
+      const pillCenter = (pRect.left - sRect.left) + scroller.scrollLeft + (pRect.width / 2);
       const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-      const left = Math.min(maxScroll, Math.max(0, centerPos - (scroller.clientWidth / 2)));
-      scroller.scrollLeft = left;
+      const targetLeft = Math.min(maxScroll, Math.max(0, pillCenter - (scroller.clientWidth / 2)));
+      scroller.scrollLeft = targetLeft;
       if (typeof scroller.scrollTo === "function") {
-        scroller.scrollTo({ left: left, behavior: behavior || "auto" });
+        scroller.scrollTo({ left: targetLeft, behavior: behavior || "auto" });
       }
     }
 
-    function activateCurrentDateView(behavior) {
-      syncTodayLabels();
-      const todayISO = getTodayISO();
-      const pills = Array.from(document.querySelectorAll("button, a, div, span, li"))
-        .map(el => getDatePill(el))
-        .filter((el, idx, arr) => el && arr.indexOf(el) === idx);
-
-      let targetPill = pills.find(p => {
-        const t = ((p.innerText || p.textContent) || "").trim();
-        const m = t.match(DATE_TAB_RE);
-        return m && m[1] === todayISO;
-      });
-
-      if (!targetPill && pills.length) {
-        const dated = pills
-          .map(p => {
-            const m = (((p.innerText || p.textContent) || "").trim()).match(DATE_TAB_RE);
-            return { pill: p, iso: m ? m[1] : "" };
-          })
-          .filter(x => x.iso)
-          .sort((a, b) => a.iso.localeCompare(b.iso));
-        const onOrBefore = dated.filter(x => x.iso <= todayISO);
-        targetPill = onOrBefore.length ? onOrBefore[onOrBefore.length - 1].pill : (dated[dated.length - 1] && dated[dated.length - 1].pill);
-      }
-
-      if (targetPill) {
-        targetPill.click();
-        setTimeout(() => centerPill(targetPill, behavior || "auto"), 50);
-        setTimeout(() => centerPill(targetPill, behavior || "auto"), 180);
+    function isPillActive(pill) {
+      if (!pill) return false;
+      const cls = (pill.className || "").toString().toLowerCase();
+      if (
+        pill.getAttribute("aria-selected") === "true" ||
+        pill.getAttribute("aria-current") === "date" ||
+        /\b(active|selected|current)\b/.test(cls)
+      ) {
         return true;
+      }
+      const cs = window.getComputedStyle(pill);
+      const rgb = (cs.backgroundColor || "").match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+      if (rgb) {
+        const r = Number(rgb[1]), g = Number(rgb[2]), b = Number(rgb[3]);
+        if (b > 135 && b > r + 35 && !(r > 230 && g > 230 && b > 230)) return true;
       }
       return false;
     }
 
-    function applyRefreshRule(retries) {
+    function selectDateByISO(targetISO, behavior) {
       syncTodayLabels();
-      // Single or double pull-to-refresh within 5 seconds always displays the current date
-      if (hasRecentRefreshWithin5s() || !userPickedDateManual) {
-        const ok = activateCurrentDateView("auto");
-        if (!ok && retries > 0) {
-          setTimeout(() => applyRefreshRule(retries - 1), 180);
-        }
+      const pills = getAllDatePills();
+      if (!pills.length) return false;
+
+      let chosen = pills.find(p => extractISO(p) === targetISO);
+      if (!chosen) {
+        const sorted = pills
+          .map(p => ({ p, iso: extractISO(p) }))
+          .filter(x => x.iso)
+          .sort((a, b) => a.iso.localeCompare(b.iso));
+        const prior = sorted.filter(x => x.iso <= targetISO);
+        chosen = prior.length ? prior[prior.length - 1].p : (sorted[sorted.length - 1] && sorted[sorted.length - 1].p);
       }
+
+      if (!chosen) return false;
+      if (!isPillActive(chosen)) {
+        chosen.click();
+      }
+      setTimeout(() => centerPill(chosen, behavior || "auto"), 35);
+      setTimeout(() => centerPill(chosen, behavior || "auto"), 150);
+      return true;
+    }
+
+    function resolveTargetDateAfterLoad() {
+      const todayISO = getTodayISO();
+      const nowMs = Date.now();
+      const recent = getRecentRefreshes(nowMs);
+      const saved = getSavedViewedDate();
+
+      // 2+ refreshes within 5 seconds -> always show current date
+      if (recent.length >= 2) {
+        saveViewedDate(todayISO);
+        return todayISO;
+      }
+
+      // 1 refresh within 5 seconds -> stay on / restore the date user was viewing (or today if none saved)
+      if (recent.length === 1) {
+        return saved || todayISO;
+      }
+
+      // Normal initial load -> show saved date if present, otherwise today
+      return saved || todayISO;
+    }
+
+    function enforceTargetDateWindow(durationMs) {
+      clearInterval(enforceTimer);
+      const start = Date.now();
+      enforceTimer = setInterval(() => {
+        const desiredISO = resolveTargetDateAfterLoad();
+        selectDateByISO(desiredISO, "auto");
+        if (Date.now() - start >= durationMs) {
+          clearInterval(enforceTimer);
+        }
+      }, 220);
     }
 
     document.addEventListener("touchstart", (ev) => {
-      if (window.scrollY <= 2 && ev.touches && ev.touches.length === 1) {
+      if (window.scrollY <= 3 && ev.touches && ev.touches.length === 1) {
         touchStartY = ev.touches[0].clientY;
-        pullRecordedThisGesture = false;
+        recordedInGesture = false;
       } else {
         touchStartY = 0;
       }
     }, { passive: true });
 
     document.addEventListener("touchmove", (ev) => {
-      if (!touchStartY || pullRecordedThisGesture) return;
-      if (window.scrollY <= 2 && ev.touches && ev.touches.length === 1) {
-        const deltaY = ev.touches[0].clientY - touchStartY;
-        if (deltaY >= 75) {
-          pullRecordedThisGesture = true;
-          recordRefreshEvent();
+      if (!touchStartY || recordedInGesture) return;
+      if (window.scrollY <= 3 && ev.touches && ev.touches.length === 1) {
+        if (ev.touches[0].clientY - touchStartY >= 70) {
+          recordedInGesture = true;
+          recordPullRefresh();
         }
       }
     }, { passive: true });
 
     window.addEventListener("pagehide", () => {
-      if (!pullRecordedThisGesture && window.scrollY <= 8) {
-        recordRefreshEvent();
+      if (!recordedInGesture && window.scrollY <= 10) {
+        recordPullRefresh();
       }
     });
 
     window.addEventListener("beforeunload", () => {
-      if (!pullRecordedThisGesture && window.scrollY <= 8) {
-        recordRefreshEvent();
+      if (!recordedInGesture && window.scrollY <= 10) {
+        recordPullRefresh();
       }
     });
 
     document.addEventListener("click", (ev) => {
       const pill = getDatePill(ev.target);
-      if (pill) {
-        userPickedDateManual = true;
-        setTimeout(() => centerPill(pill, "smooth"), 40);
-        setTimeout(() => centerPill(pill, "smooth"), 160);
+      if (!pill) return;
+      const iso = extractISO(pill);
+      if (iso) {
+        saveViewedDate(iso);
       }
+      setTimeout(() => centerPill(pill, "smooth"), 40);
+      setTimeout(() => centerPill(pill, "smooth"), 160);
     }, true);
 
-    window.addEventListener("DOMContentLoaded", () => applyRefreshRule(12));
-    window.addEventListener("load", () => setTimeout(() => applyRefreshRule(8), 100));
-    window.addEventListener("pageshow", () => {
-      // If a pull-to-refresh happened within 5s (1x or 2x), force current date view immediately
-      if (hasRecentRefreshWithin5s()) {
-        userPickedDateManual = false;
-      }
-      applyRefreshRule(10);
-    });
+    function initController() {
+      syncTodayLabels();
+      const desiredISO = resolveTargetDateAfterLoad();
+      selectDateByISO(desiredISO, "auto");
+      enforceTargetDateWindow(2400);
+    }
+
+    window.addEventListener("DOMContentLoaded", initController);
+    window.addEventListener("load", () => setTimeout(initController, 80));
+    window.addEventListener("pageshow", () => setTimeout(initController, 80));
   })();
 </script>
 </body></html>
