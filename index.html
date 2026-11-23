@@ -133,4 +133,53 @@
         }
       });
     })();
-    </script></body></html>
+    </script>
+<!-- Valence AI Elite Access Subscription Widget -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<div id="valence-sub-card" style="background: #0f172a; color: #f8fafc; padding: 24px; border-radius: 10px; max-width: 420px; margin: 20px auto; text-align: center; border: 1px solid #334155; font-family: system-ui, -apple-system, sans-serif;">
+    <h3 style="color: #38bdf8; margin-top: 0; margin-bottom: 8px; font-size: 18px;">Valence AI Elite Access</h3>
+    <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 18px; line-height: 1.5;">
+        Unlock full access to Tier-1 sharp picks, Bayesian yield metrics, and automated match logs for <strong>₦10,000 / month</strong>.
+    </p>
+    <input type="email" id="subscriber-email" placeholder="Enter your email address" required 
+           style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 6px; border: 1px solid #475569; background: #1e293b; color: #fff; margin-bottom: 12px; font-size: 14px;">
+    <button onclick="initiatePaystackSubscription()" 
+            style="width: 100%; background: #16a34a; color: #ffffff; border: none; padding: 12px 20px; font-weight: 700; border-radius: 6px; cursor: pointer; font-size: 14px;">
+        Subscribe Now (₦10,000/mo)
+    </button>
+    <p id="sub-status-msg" style="font-size: 12px; color: #94a3b8; margin-top: 10px; margin-bottom: 0;"></p>
+</div>
+<script>
+    function initiatePaystackSubscription() {
+        const emailInput = document.getElementById('subscriber-email').value.trim();
+        const statusMsg = document.getElementById('sub-status-msg');
+        if (!emailInput || !emailInput.includes('@')) {
+            statusMsg.style.color = '#f87171';
+            statusMsg.textContent = 'Please enter a valid email address.';
+            return;
+        }
+        statusMsg.style.color = '#38bdf8';
+        statusMsg.textContent = 'Opening secure Paystack checkout...';
+        const handler = PaystackPop.setup({
+            key: 'pk_live_3b5aff686eaff612d0e6315804bb7679c6a2b6ed',
+            email: emailInput,
+            amount: 1000000,
+            currency: 'NGN',
+            plan: 'PLN_yhk5z4rnocx4yjk',
+            ref: 'VAL_' + Math.floor((Math.random() * 1000000000) + 1),
+            callback: function(response) {
+                statusMsg.style.color = '#4ade80';
+                statusMsg.textContent = 'Payment verified! Ref: ' + response.reference + '. Unlocking access...';
+                localStorage.setItem('valence_subscriber_email', emailInput);
+                setTimeout(() => { location.reload(); }, 2000);
+            },
+            onClose: function() {
+                statusMsg.style.color = '#94a3b8';
+                statusMsg.textContent = 'Checkout closed. Click Subscribe whenever you are ready.';
+            }
+        });
+        handler.openIframe();
+    }
+</script>
+
+</body></html>
