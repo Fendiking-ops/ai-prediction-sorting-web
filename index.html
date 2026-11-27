@@ -37,7 +37,7 @@
     </script>
 
 <style id="valence-freemium-elite-theme">
-  body.valence-blue-theme, body {
+  body, body.valence-blue-theme {
     background: linear-gradient(180deg, #07162b 0%, #0b2240 48%, #07162b 100%) !important;
     color: #e6f0ff !important;
   }
@@ -122,7 +122,6 @@
     min-height: 16px;
   }
 </style>
-
 </head><body><div class="container">
 <a href="https://wa.me/2340000000000" target="_blank" style="text-decoration: none; display: block; margin-bottom: 15px;"><div style="background-color: #ffffff; border: 2px dashed #3b82f6; color: #1e40af; padding: 14px; text-align: center; border-radius: 8px; font-size: 13px; font-weight: 800; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">📢 HEADER BILLBOARD AD SLOT<br><span style="color:#2563eb; font-size:11px; font-weight:600;">Tap to Rent Ad Space</span></div></a>
 <div class="header-box"><h2>Valence AI - True Quantitative Engine</h2><p style="font-size: 12px; color: #78350f; margin:0;">Integrating Live APIs, Tier-Weighted Proxies, and dynamic Poisson distributions to return exact value indexes and realistic match scores.</p></div>
@@ -222,4 +221,66 @@
       });
     })();
     </script><!-- manual-sync: 2026-11-26T22:45:27Z -->
+<section id="valence-elite-access-gateway" aria-label="Valence AI Elite Access">
+  <span class="va-badge">ELITE MEMBERSHIP</span>
+  <h2>Valence AI Elite Access</h2>
+  <p>Unlock full access to premium prediction intelligence, live edge breakdowns, and automated match logs.</p>
+  <div class="va-price-box">
+    <strong>₦10,000</strong>
+    <span>per month · Paystack</span>
+  </div>
+  <input id="va-elite-email" type="email" placeholder="Enter your email address" autocomplete="email" />
+  <button id="va-elite-submit" class="va-cta-btn" type="button">Subscribe Now (₦10,000/mo)</button>
+  <div id="va-elite-status" class="va-status"></div>
+</section>
+<script id="valence-freemium-elite-script">
+(function() {
+  var OWNER_EMAIL = "pallorecords@gmail.com";
+  function ensureEliteBelowMatchups() {
+    var widget = document.getElementById("valence-elite-access-gateway");
+    if (!widget) return;
+    var cards = Array.prototype.slice.call(document.querySelectorAll(".match-card"));
+    var visibleCards = cards.filter(function(el) {
+      var st = window.getComputedStyle(el);
+      return st.display !== "none" && st.visibility !== "hidden";
+    });
+    var anchor = visibleCards.length ? visibleCards[visibleCards.length - 1] : (cards.length ? cards[cards.length - 1] : null);
+    if (anchor && anchor.parentNode && anchor.nextElementSibling !== widget) {
+      anchor.parentNode.insertBefore(widget, anchor.nextElementSibling);
+    }
+    widget.style.display = "block";
+  }
+  function bindEliteGateway() {
+    var btn = document.getElementById("va-elite-submit");
+    var inp = document.getElementById("va-elite-email");
+    var stEl = document.getElementById("va-elite-status");
+    if (!btn || !inp || !stEl || btn.dataset.bound === "1") return;
+    btn.dataset.bound = "1";
+    btn.addEventListener("click", function() {
+      var val = (inp.value || "").trim().toLowerCase();
+      if (!val || val.indexOf("@") === -1) {
+        stEl.textContent = "Please enter a valid email address.";
+        return;
+      }
+      if (val === OWNER_EMAIL) {
+        localStorage.setItem("valence_elite_access", JSON.stringify({ email: val, tier: "owner_free_forever", active: true }));
+        stEl.textContent = "Owner access verified (free forever) for " + val + ".";
+      } else {
+        localStorage.setItem("valence_elite_pending_email", val);
+        stEl.textContent = "Proceeding to Paystack Elite subscription (₦10,000/mo) for " + val + "...";
+      }
+    });
+  }
+  function runAll() {
+    if (document.body && !document.body.classList.contains("valence-blue-theme")) {
+      document.body.classList.add("valence-blue-theme");
+    }
+    ensureEliteBelowMatchups();
+    bindEliteGateway();
+  }
+  document.addEventListener("DOMContentLoaded", runAll);
+  document.addEventListener("click", function() { setTimeout(ensureEliteBelowMatchups, 40); });
+  window.addEventListener("load", function() { setTimeout(runAll, 80); });
+})();
+</script>
 </body></html>
