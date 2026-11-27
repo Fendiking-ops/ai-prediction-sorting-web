@@ -369,6 +369,26 @@
       verifyAndRoute(pendingRef, stEl, true);
     }
 
+    var checkEmailSubscriptionFirst = function(targetEmail, fallbackRef) {
+      return fetch(BACKEND_URL + "/paystack/verify-email?email=" + encodeURIComponent(targetEmail))
+        .then(function(r) { return r.ok ? r.json() : { paid: false }; })
+        .then(function(subRes) {
+          if (subRes && subRes.paid) {
+            localStorage.setItem("valence_elite_access", JSON.stringify({
+              email: targetEmail,
+              reference: subRes.reference || fallbackRef || "",
+              active: true,
+              verified_at: Date.now()
+            }));
+            localStorage.removeItem("valence_elite_pending_ref");
+            stEl.textContent = "Subscription active! Routing to Valence AI Elite...";
+            window.location.href = subRes.redirect_url || PREMIUM_URL;
+            return true;
+          }
+          return false;
+        })
+        .catch(function() { return false; });
+    };
     var freshBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(freshBtn, btn);
 
