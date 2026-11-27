@@ -38,60 +38,38 @@
 
 <style id="valence-freemium-elite-theme">
   body, body.valence-blue-theme {
-    background: linear-gradient(180deg, #0b3d91 0%, #0d47a1 38%, #082f73 100%) !important;
-    color: #0f172a !important;
-  }
-  .header-banner, .hero-card, .title-card, .top-card {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border-radius: 14px !important;
-    box-shadow: 0 8px 22px rgba(4, 21, 56, 0.28) !important;
-  }
-  .date-btn, .date-pill {
-    background: #ffffff !important;
-    color: #0f172a !important;
-    border: 1.5px solid #1d4ed8 !important;
-    border-radius: 10px !important;
-    font-weight: 700 !important;
-  }
-  .date-btn.active, .date-pill.active, .date-btn[aria-selected="true"] {
-    background: #1d4ed8 !important;
-    color: #ffffff !important;
-    border-color: #ffffff !important;
+    background: linear-gradient(180deg, #0b3d91 0%, #0d47a1 42%, #082f73 100%) !important;
+    color: #000000 !important;
   }
   .match-card {
     background: #ffffff !important;
-    color: #0f172a !important;
-    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    color: #000000 !important;
+    border: 1px solid rgba(15, 23, 42, 0.12) !important;
     border-radius: 14px !important;
     box-shadow: 0 8px 20px rgba(4, 21, 56, 0.24) !important;
   }
-  .match-card .match-teams, .match-card h3, .match-card strong {
-    color: #0b3d91 !important;
+  .match-card, .match-card * {
+    color: #000000;
   }
-  .match-card .highlight {
-    color: #1d4ed8 !important;
+  .match-card .badge-pending {
+    background: #fef08a !important;
+    color: #000000 !important;
     font-weight: 700 !important;
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
   }
-  .odds-badge {
+  .match-card .badge-result {
+    background: #dcfce7 !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
+  }
+  .match-card .odds-badge {
     background: #ffe4e6 !important;
-    color: #e11d48 !important;
+    color: #be123c !important;
     border: 1px solid #fecdd3 !important;
     font-weight: 700 !important;
-  }
-  .badge-pending {
-    background: #fef08a !important;
-    color: #854d0e !important;
-    font-weight: 700 !important;
-    padding: 2px 8px !important;
-    border-radius: 6px !important;
-  }
-  .badge-result {
-    background: #dcfce7 !important;
-    color: #166534 !important;
-    font-weight: 700 !important;
-    padding: 2px 8px !important;
-    border-radius: 6px !important;
   }
   #valence-elite-access-gateway {
     margin: 20px 0 24px 0;
@@ -110,7 +88,7 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     background: rgba(255, 255, 255, 0.16);
-    color: #e0f2fe;
+    color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.35);
     margin-bottom: 10px;
   }
@@ -135,6 +113,7 @@
     border: 1px solid rgba(255, 255, 255, 0.25);
     margin-bottom: 12px;
     font-size: 14px;
+    color: #ffffff;
   }
   #valence-elite-access-gateway input[type="email"] {
     width: 100%;
@@ -142,15 +121,14 @@
     padding: 11px 12px;
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.35);
-    background: rgba(255, 255, 255, 0.96);
-    color: #0f172a;
+    background: #ffffff;
+    color: #000000;
     font-size: 14px;
     margin-bottom: 12px;
   }
   #valence-elite-access-gateway button.va-cta-btn {
     width: 100%;
     padding: 12px 16px;
-    border: none;
     border-radius: 10px;
     background: #1d4ed8;
     border: 1px solid #93c5fd;
