@@ -317,29 +317,39 @@
 <script id="valence-paystack-live-bridge">
 (function() {
   var BACKEND_URL = "https://valence-paystack-webhook.onrender.com";
+  var PREMIUM_URL = "https://fendiking-ops.github.io/ai-prediction-admin-web./";
   var OWNER_EMAIL = "pallorecords@gmail.com";
 
-  function verifyAndRoute(reference, statusEl) {
+  function grantAndRoute(email, reference) {
+    localStorage.setItem("valence_elite_access", JSON.stringify({
+      email: email || "",
+      reference: reference || "",
+      active: true,
+      verified_at: Date.now()
+    }));
+    localStorage.removeItem("valence_elite_pending_ref");
+    window.location.href = PREMIUM_URL;
+  }
+
+  function verifyAndRoute(reference, statusEl, silent) {
     if (!BACKEND_URL || !reference) return;
-    statusEl.textContent = "Verifying Paystack payment...";
+    if (statusEl && !silent) {
+      statusEl.textContent = "Verifying Paystack payment...";
+    }
     fetch(BACKEND_URL + "/paystack/verify?reference=" + encodeURIComponent(reference))
       .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
       .then(function(res) {
-        if (res.ok && res.data && res.data.paid && res.data.redirect_url) {
-          localStorage.setItem("valence_elite_access", JSON.stringify({
-            email: res.data.email || "",
-            reference: reference,
-            active: true,
-            verified_at: Date.now()
-          }));
-          statusEl.textContent = "Payment confirmed! Routing to Valence AI Elite...";
-          window.location.href = res.data.redirect_url;
-        } else {
+        if (res.ok && res.data && res.data.paid) {
+          if (statusEl) statusEl.textContent = "Payment confirmed! Routing to Valence AI Elite...";
+          grantAndRoute(res.data.email || "", reference);
+        } else if (statusEl && !silent) {
           statusEl.textContent = "Payment not yet confirmed. Please complete checkout or try again.";
         }
       })
       .catch(function() {
-        statusEl.textContent = "Could not verify payment right now. Please retry.";
+        if (statusEl && !silent) {
+          statusEl.textContent = "Could not verify payment right now (server may be waking up). Please retry.";
+        }
       });
   }
 
@@ -351,8 +361,12 @@
 
     var params = new URLSearchParams(window.location.search);
     var refParam = params.get("reference") || params.get("trxref");
+    var pendingRef = localStorage.getItem("valence_elite_pending_ref") || "";
+
     if (refParam) {
-      verifyAndRoute(refParam, stEl);
+      verifyAndRoute(refParam, stEl, false);
+    } else if (pendingRef) {
+      verifyAndRoute(pendingRef, stEl, true);
     }
 
     var freshBtn = btn.cloneNode(true);
@@ -367,7 +381,12 @@
       if (email === OWNER_EMAIL) {
         localStorage.setItem("valence_elite_access", JSON.stringify({ email: email, tier: "owner_free_forever", active: true }));
         stEl.textContent = "Owner access verified (free forever). Routing to premium...";
-        window.location.href = "https://fendiking-ops.github.io/ai-prediction-admin-web./";
+        window.location.href = PREMIUM_URL;
+        return;
+      }
+      var existingRef = localStorage.getItem("valence_elite_pending_ref") || "";
+      if (existingRef) {
+        verifyAndRoute(existingRef, stEl, false);
         return;
       }
       freshBtn.disabled = true;
