@@ -386,7 +386,44 @@
       }
       var existingRef = localStorage.getItem("valence_elite_pending_ref") || "";
       if (existingRef) {
-        verifyAndRoute(existingRef, stEl, false);
+        stEl.textContent = "Checking payment reference & subscription status...";
+        fetch(BACKEND_URL + "/paystack/verify?reference=" + encodeURIComponent(existingRef))
+          .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
+          .then(function(res) {
+            if (res.ok && res.data && res.data.paid) {
+              localStorage.setItem("valence_elite_access", JSON.stringify({
+                email: (res.data.email || email),
+                reference: existingRef,
+                active: true,
+                verified_at: Date.now()
+              }));
+              localStorage.removeItem("valence_elite_pending_ref");
+              stEl.textContent = "Payment confirmed! Routing to Valence AI Elite...";
+              window.location.href = res.data.redirect_url || PREMIUM_URL;
+            } else {
+              return fetch(BACKEND_URL + "/paystack/verify-email?email=" + encodeURIComponent(email))
+                .then(function(r2) { return r2.ok ? r2.json() : { paid: false }; })
+                .then(function(subRes) {
+                  if (subRes && subRes.paid) {
+                    localStorage.setItem("valence_elite_access", JSON.stringify({
+                      email: email,
+                      reference: subRes.reference || existingRef,
+                      active: true,
+                      verified_at: Date.now()
+                    }));
+                    localStorage.removeItem("valence_elite_pending_ref");
+                    stEl.textContent = "Subscription active! Routing to Valence AI Elite...";
+                    window.location.href = subRes.redirect_url || PREMIUM_URL;
+                  } else {
+                    localStorage.removeItem("valence_elite_pending_ref");
+                    stEl.textContent = "No active subscription found yet for " + email + ". Tap Subscribe Now again to start checkout.";
+                  }
+                });
+            }
+          })
+          .catch(function() {
+            stEl.textContent = "Could not verify payment right now (server may be waking up). Please retry.";
+          });
         return;
       }
       freshBtn.disabled = true;
