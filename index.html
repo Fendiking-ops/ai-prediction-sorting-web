@@ -293,7 +293,7 @@
         return;
       }
       if (val === OWNER_EMAIL) {
-        localStorage.setItem("valence_elite_access", JSON.stringify({ email: val, tier: "owner_free_forever", active: true }));
+        localStorage.setItem("valence_subscriber_email", email); localStorage.setItem("valence_subscription_active", "true"); localStorage.setItem("valence_elite_access", JSON.stringify({ email: val, tier: "owner_free_forever", active: true }));
         stEl.textContent = "Owner access verified (free forever) for " + val + ".";
       } else {
         localStorage.setItem("valence_elite_pending_email", val);
@@ -321,7 +321,7 @@
   var OWNER_EMAIL = "pallorecords@gmail.com";
 
   function grantAndRoute(email, reference) {
-    localStorage.setItem("valence_elite_access", JSON.stringify({
+    localStorage.setItem("valence_subscriber_email", email); localStorage.setItem("valence_subscription_active", "true"); localStorage.setItem("valence_elite_access", JSON.stringify({
       email: email || "",
       reference: reference || "",
       active: true,
@@ -374,7 +374,7 @@
         .then(function(r) { return r.ok ? r.json() : { paid: false }; })
         .then(function(subRes) {
           if (subRes && subRes.paid) {
-            localStorage.setItem("valence_elite_access", JSON.stringify({
+            localStorage.setItem("valence_subscriber_email", email); localStorage.setItem("valence_subscription_active", "true"); localStorage.setItem("valence_elite_access", JSON.stringify({
               email: targetEmail,
               reference: subRes.reference || fallbackRef || "",
               active: true,
@@ -399,7 +399,7 @@
         return;
       }
       if (email === OWNER_EMAIL) {
-        localStorage.setItem("valence_elite_access", JSON.stringify({ email: email, tier: "owner_free_forever", active: true }));
+        localStorage.setItem("valence_subscriber_email", email); localStorage.setItem("valence_subscription_active", "true"); localStorage.setItem("valence_elite_access", JSON.stringify({ email: email, tier: "owner_free_forever", active: true }));
         stEl.textContent = "Owner access verified (free forever). Routing to premium...";
         window.location.href = PREMIUM_URL;
         return;
@@ -411,7 +411,7 @@
           .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, data: d }; }); })
           .then(function(res) {
             if (res.ok && res.data && res.data.paid) {
-              localStorage.setItem("valence_elite_access", JSON.stringify({
+              localStorage.setItem("valence_subscriber_email", email); localStorage.setItem("valence_subscription_active", "true"); localStorage.setItem("valence_elite_access", JSON.stringify({
                 email: (res.data.email || email),
                 reference: existingRef,
                 active: true,
@@ -425,7 +425,7 @@
                 .then(function(r2) { return r2.ok ? r2.json() : { paid: false }; })
                 .then(function(subRes) {
                   if (subRes && subRes.paid) {
-                    localStorage.setItem("valence_elite_access", JSON.stringify({
+                    localStorage.setItem("valence_subscriber_email", email); localStorage.setItem("valence_subscription_active", "true"); localStorage.setItem("valence_elite_access", JSON.stringify({
                       email: email,
                       reference: subRes.reference || existingRef,
                       active: true,
